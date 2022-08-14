@@ -23,4 +23,5 @@ jobs:
 
       - name: Run build
         run: |
+          cd client/
           yarn build

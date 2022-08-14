@@ -24,8 +24,10 @@ jobs:
 
       - name: Run build
         run: |
+          cd backend/
           go build .
 
       - name: Run vet & lint
         run: |
+          cd backend/
           go vet .
