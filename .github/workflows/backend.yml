@@ -1,4 +1,4 @@
-name: WebServer
+name: Backend
 
 on:
   pull_request:
@@ -20,14 +20,14 @@ jobs:
         run: |
           cd backend/
           go version
-          go get -u golang.org/x/lint/golint
-
-      - name: Run build
-        run: |
-          cd backend/
-          go build .
+          go get -d ./...
 
       - name: Run vet & lint
         run: |
           cd backend/
           go vet .
+
+      - name: Run build
+        run: |
+          cd backend/
+          go build .

@@ -1,0 +1,71 @@
+section {
+	@apply flex items-center justify-center py-24 px-4;
+	.container {
+		@apply relative mx-auto w-full max-w-lg;
+		.inner-wrapper {
+			@apply pt-20 pb-14 w-full  rounded-[30px] bg-[#28282b] z-10 relative flex items-center justify-center flex-col text-[#D7D7D7];
+
+			box-shadow: 0px 15px 18px rgba(0, 0, 0, 0.14), 0px 6.26664px 7.51997px rgba(0, 0, 0, 0.10064),
+				0px 3.35045px 4.02054px rgba(0, 0, 0, 0.083455), 0px 1.87823px 2.25388px rgba(0, 0, 0, 0.07),
+				0px 0.997515px 1.19702px rgba(0, 0, 0, 0.056545);
+
+			.logo {
+				@apply w-fit mx-auto;
+				svg {
+					@apply w-28 h-28;
+				}
+			}
+
+			h1 {
+				@apply font-bold text-[28px] mt-4 text-center;
+				span {
+					@apply underline uppercase;
+					text-underline-offset: 5px;
+				}
+			}
+
+			button {
+				@apply flex items-center justify-center w-fit gap-1.5 bg-[#323236] py-2 px-4 uppercase rounded-md mx-auto mt-14 font-bold text-sm relative overflow-hidden duration-300 ease-in-out;
+				filter: drop-shadow(0px 18px 36px rgba(0, 0, 0, 0.07))
+					drop-shadow(0px 7.51997px 15.0399px rgba(0, 0, 0, 0.0503198))
+					drop-shadow(0px 4.02054px 8.04107px rgba(0, 0, 0, 0.0417275))
+					drop-shadow(0px 2.25388px 4.50776px rgba(0, 0, 0, 0.035))
+					drop-shadow(0px 1.19702px 2.39404px rgba(0, 0, 0, 0.0282725))
+					drop-shadow(0px 0.498106px 0.996212px rgba(0, 0, 0, 0.0196802));
+
+				&::after {
+					@apply absolute content-[""] left-0 top-0 bottom-0 h-full w-[0%] duration-300 ease-in-out bg-white;
+				}
+
+				svg path {
+					@apply duration-300 ease-in-out;
+				}
+
+				&:hover {
+					@apply text-black;
+					svg path {
+						@apply fill-black;
+					}
+				}
+
+				&:hover::after {
+					@apply w-full z-[-1];
+				}
+			}
+		}
+
+		.blob-1 {
+			@apply absolute top-[-80px] left-[-80px];
+		}
+
+		.blob-2 {
+			@apply absolute bottom-[-80px] right-[-80px];
+		}
+	}
+}
+
+@supports ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
+	section .container .inner-wrapper {
+		@apply bg-[#28282Bde] backdrop-blur-md;
+	}
+}

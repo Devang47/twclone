@@ -1,0 +1,123 @@
+main {
+	@apply w-full h-full overflow-hidden;
+
+	section {
+		@apply bg-[#1C1C1F] max-w-2xl mx-auto;
+
+		.container {
+			@apply h-full overflow-hidden relative w-full;
+		}
+
+		.data {
+			@apply h-[calc(100vh-69px)] overflow-y-scroll w-full py-5 px-4 md:px-8 pb-20;
+			& > button {
+				@apply mt-4 w-fit bg-[#D7D7D7] font-bold py-2 px-5 rounded-[30px] mx-auto text-[15px] flex items-center justify-center gap-1;
+			}
+		}
+
+		.input {
+			@apply px-5 py-2 relative z-10;
+			.textarea {
+				@apply h-[150px] pb-4 w-full bg-[#27272a] rounded-[13px] px-[2.5rem] py-5 relative;
+			}
+
+			textarea {
+				@apply resize-none text-[#BEBEBE] h-full outline-none border-none w-full bg-transparent;
+				font-family: 'Sans';
+			}
+
+			.cshadow {
+				@apply absolute bottom-[1rem] h-[40px] bg-gradient-to-t from-[#27272a] to-transparent w-[calc(100%-4rem)] pointer-events-none;
+			}
+
+			button {
+				@apply mt-4 block w-fit bg-[#D7D7D7] font-bold py-1 px-3 rounded-[30px] ml-auto text-sm absolute bottom-6 right-6;
+			}
+		}
+
+		.tweets {
+			@apply flex items-center justify-center overflow-y-scroll px-5 py-4 mt-6 flex-col gap-10 pb-10 relative z-10;
+
+			.tweet {
+				@apply rounded-[13px] bg-[#323236] px-[2.5rem] py-4 pt-6 relative;
+				box-shadow: 0px 15px 18px rgba(0, 0, 0, 0.14),
+					0px 6.26664px 7.51997px rgba(0, 0, 0, 0.10064),
+					0px 3.35045px 4.02054px rgba(0, 0, 0, 0.083455),
+					0px 1.87823px 2.25388px rgba(0, 0, 0, 0.07),
+					0px 0.997515px 1.19702px rgba(0, 0, 0, 0.056545),
+					0px 0.415088px 0.498106px rgba(0, 0, 0, 0.0393604);
+
+				h2 {
+					@apply text-[#D7D7D7] font-bold text-lg;
+				}
+
+				p {
+					@apply text-[#BEBEBE] mt-1.5 leading-[1.6];
+				}
+
+				.action-btns {
+					@apply mt-4 flex items-center gap-3;
+
+					button {
+						@apply p-2 h-[35px] w-[35px]
+                        flex items-center justify-center justify-items-center rounded-full  hover:bg-[#ffffff0f] active:bg-[#ffffff21] duration-100;
+					}
+
+					button:first-of-type {
+						svg {
+							@apply w-[20px];
+						}
+					}
+
+					svg {
+						@apply w-[20px];
+					}
+				}
+
+				.options {
+					@apply flex items-center justify-center gap-[3px] flex-col w-8 absolute top-5 right-4 h-8 hover:bg-[#ffffff0f] active:bg-[#ffffff21] duration-100 rounded-full cursor-pointer;
+					span {
+						@apply bg-[#D7D7D7] h-[3px] w-[3px] rounded-full;
+					}
+				}
+			}
+		}
+
+		.blob-1 {
+			@apply absolute top-[120px] left-[-40px];
+			svg {
+				@apply w-44;
+			}
+		}
+
+		.blob-2 {
+			@apply absolute top-[350px] right-[-40px];
+			svg {
+				@apply w-44;
+			}
+		}
+
+		.blob-3 {
+			@apply absolute top-[540px] left-[-40px] rotate-180;
+			svg {
+				@apply w-44;
+			}
+		}
+	}
+}
+
+.no-scrollbar::-webkit-scrollbar {
+	display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+	-ms-overflow-style: none; /* IE and Edge */
+	scrollbar-width: none; /* Firefox */
+}
+
+@supports ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
+	main section .tweets .tweet {
+		@apply bg-[#323236de] backdrop-blur-md;
+	}
+}

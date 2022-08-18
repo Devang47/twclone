@@ -1,16 +1,24 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 
+	"github.com/fatih/color"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/rs/cors"
 )
 
 func main() {
-	fmt.Println("Starting the server at 8080!")
+
+	d := color.New(color.FgGreen, color.Bold)
+	c := color.New(color.FgGreen)
+	c.Printf("Started backend server at: ")
+	d.Println("8080")
+
+	d.Println("	➜  http://localhost:8080/")
+
+	// color.Bold
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)

@@ -1,0 +1,6 @@
+nav {
+	@apply w-full border-b border-[#323236] py-3 px-5 md:px-10 lg:px-12 md:py-3;
+	svg {
+		@apply w-10 h-10;
+	}
+}
