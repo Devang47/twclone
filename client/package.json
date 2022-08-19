@@ -30,6 +30,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@auth0/auth0-spa-js": "^1.22.2",
 		"sass": "^1.54.3"
 	}
 }

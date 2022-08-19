@@ -1,4 +1,4 @@
-section {
+#login {
 	@apply flex items-center justify-center py-24 px-4;
 	.container {
 		@apply relative mx-auto w-full max-w-lg;
@@ -17,7 +17,7 @@ section {
 			}
 
 			h1 {
-				@apply font-bold text-[28px] mt-4 text-center;
+				@apply font-[800] text-[28px] mt-4 text-center;
 				span {
 					@apply underline uppercase;
 					text-underline-offset: 5px;
@@ -61,11 +61,5 @@ section {
 		.blob-2 {
 			@apply absolute bottom-[-80px] right-[-80px];
 		}
-	}
-}
-
-@supports ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
-	section .container .inner-wrapper {
-		@apply bg-[#28282Bde] backdrop-blur-md;
 	}
 }

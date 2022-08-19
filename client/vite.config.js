@@ -9,7 +9,8 @@ const config = {
 			$components: resolve('./src/lib/components'),
 			$icons: resolve('./src/lib/icons'),
 			$styles: resolve('./src/styles'),
-			$store: resolve('./src/store')
+			$store: resolve('./src/store'),
+			$utils: resolve('./src/utils')
 		}
 	}
 };

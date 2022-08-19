@@ -1,7 +1,7 @@
 main {
 	@apply w-full h-full overflow-hidden;
 
-	section {
+	#app {
 		@apply bg-[#1C1C1F] max-w-2xl mx-auto;
 
 		.container {
@@ -22,7 +22,7 @@ main {
 			}
 
 			textarea {
-				@apply resize-none text-[#BEBEBE] h-full outline-none border-none w-full bg-transparent;
+				@apply resize-none text-[#BEBEBE] h-full outline-none border-none w-full bg-transparent font-medium;
 			}
 
 			.cshadow {
@@ -51,7 +51,7 @@ main {
 				}
 
 				p {
-					@apply text-[#BEBEBE] mt-1.5 leading-[1.6];
+					@apply text-[#BEBEBE] mt-1.5 font-medium leading-[1.6];
 				}
 
 				.action-btns {
@@ -102,21 +102,5 @@ main {
 				@apply w-44;
 			}
 		}
-	}
-}
-
-.no-scrollbar::-webkit-scrollbar {
-	display: none;
-}
-
-/* Hide scrollbar for IE, Edge and Firefox */
-.no-scrollbar {
-	-ms-overflow-style: none; /* IE and Edge */
-	scrollbar-width: none; /* Firefox */
-}
-
-@supports ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
-	main section .tweets .tweet {
-		@apply bg-[#323236de] backdrop-blur-md;
 	}
 }
