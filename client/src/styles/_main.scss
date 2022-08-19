@@ -5,11 +5,11 @@ main {
 		@apply bg-[#1C1C1F] max-w-2xl mx-auto;
 
 		.container {
-			@apply h-full overflow-hidden relative w-full;
+			@apply h-full overflow-hidden relative w-full max-w-none;
 		}
 
 		.data {
-			@apply h-[calc(100vh-69px)] overflow-y-scroll w-full py-5 px-4 md:px-8 pb-20;
+			@apply h-[calc(100vh-69px)] overflow-y-scroll w-full py-5 sm:px-8 pb-20;
 			& > button {
 				@apply mt-4 w-fit bg-[#D7D7D7] font-bold py-2 px-5 rounded-[30px] mx-auto text-[15px] flex items-center justify-center gap-1;
 			}
@@ -18,7 +18,7 @@ main {
 		.input {
 			@apply px-5 py-2 relative z-10;
 			.textarea {
-				@apply h-[150px] pb-4 w-full bg-[#27272a] rounded-[13px] px-[2.5rem] py-5 relative;
+				@apply h-[150px] pb-4 w-full bg-[#27272a] rounded-[13px] px-6 sm:px-[2.5rem] py-5 relative;
 			}
 
 			textarea {
@@ -38,7 +38,7 @@ main {
 			@apply flex items-center justify-center overflow-y-scroll px-5 py-4 mt-6 flex-col gap-10 pb-10 relative z-10;
 
 			.tweet {
-				@apply rounded-[13px] bg-[#323236] px-[2.5rem] py-4 pt-6 relative;
+				@apply rounded-[13px] bg-[#323236] px-6 sm:px-[2.5rem] py-4 pt-6 relative;
 				box-shadow: 0px 15px 18px rgba(0, 0, 0, 0.14),
 					0px 6.26664px 7.51997px rgba(0, 0, 0, 0.10064),
 					0px 3.35045px 4.02054px rgba(0, 0, 0, 0.083455),
