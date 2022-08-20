@@ -1,0 +1,8 @@
+{
+    "name": "TWClone",
+    "short_name": "TWClone",
+    "start_url": "/login",
+    "background_color": "#151518",
+    "theme_color": "#23AEE5",
+    "display": "minimal-ui"
+}

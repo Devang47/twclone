@@ -8,14 +8,25 @@
 	import Navbar from '$lib/layout/Navbar.svelte';
 
 	import { onMount } from 'svelte';
-	import { isAuthenticated } from '$store/auth';
+	import { isAuthenticated, user } from '$store/auth';
 	import Loader from '$lib/components/Loader.svelte';
 	import { goto } from '$app/navigation';
+	import auth from '$utils/authService';
 
-	onMount(() => {
-		if (!$isAuthenticated) {
-			goto('/login');
+	let loading = true;
+	onMount(async () => {
+		if (!$user?.email) {
+			let auth0Client = await auth.createClient();
+			isAuthenticated.set(await auth0Client.isAuthenticated());
+			user?.set(await auth0Client.getUser());
+
+			if (!$isAuthenticated) {
+				goto('/login');
+			}
+			console.log($user, auth0Client);
 		}
+
+		loading = false;
 	});
 </script>
 
@@ -23,7 +34,7 @@
 	<title>App | TWClone</title>
 </svelte:head>
 
-{#if !$isAuthenticated}
+{#if loading || !$isAuthenticated}
 	<Loader />
 {:else}
 	<Navbar />

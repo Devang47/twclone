@@ -1,4 +1,8 @@
-<div class="loader">
+<script>
+	import { fade } from 'svelte/transition';
+</script>
+
+<div class="loader" transition:fade={{ duration: 300 }}>
 	<div class="sk-folding-cube">
 		<div class="sk-cube1 sk-cube" />
 		<div class="sk-cube2 sk-cube" />

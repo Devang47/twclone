@@ -18,6 +18,8 @@
 		isAuthenticated.set(await auth0Client.isAuthenticated());
 		user.set(await auth0Client.getUser());
 
+		console.log($user, auth0Client);
+
 		if ($isAuthenticated) {
 			goto('/');
 		} else {

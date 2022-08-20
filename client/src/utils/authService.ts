@@ -20,7 +20,6 @@ async function loginWithPopup(client: Auth0Client, options?: PopupLoginOptions) 
 		isAuthenticated.set(true);
 		goto('/');
 	} catch (e) {
-		// eslint-disable-next-line
 		console.error(e);
 	} finally {
 		popupOpen.set(false);
