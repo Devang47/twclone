@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Logo from '$lib/icons/Logo.svelte';
-	import { isAuthenticated } from '$store/auth';
+	import { isAuthenticated, user } from '$store/auth';
 	import auth from '$utils/authService';
 	import type { Auth0Client } from '@auth0/auth0-spa-js';
 	import { onMount } from 'svelte';
@@ -23,6 +23,10 @@
 <nav>
 	<div class="logo">
 		<Logo />
+	</div>
+
+	<div class="username">
+		{$user?.name}
 	</div>
 
 	{#if $isAuthenticated}

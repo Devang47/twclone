@@ -30,6 +30,10 @@
 	}
 </script>
 
+<svelte:head>
+	<title>Signin | TWClone</title>
+</svelte:head>
+
 {#if $popupOpen}
 	<Loader />
 {:else}

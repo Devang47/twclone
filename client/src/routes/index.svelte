@@ -19,6 +19,10 @@
 	});
 </script>
 
+<svelte:head>
+	<title>App | TWClone</title>
+</svelte:head>
+
 {#if !$isAuthenticated}
 	<Loader />
 {:else}
