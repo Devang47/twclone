@@ -36,6 +36,6 @@ jobs:
           use_existing_version_if_available: true
           application_name: twclone backend
           environment_name: Twclonebackend-env
-          version_label: twclone latest build
+          version_label: Sample Application
           region: us-east-1
           deployment_package: backend/eb.zip
