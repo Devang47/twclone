@@ -1,31 +1,41 @@
-name: Deploy Backend
+name: Test & Deploy Backend
 on:
   push:
     branches:
-    - main
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
 
-    - name: Checkout source code
-      uses: actions/checkout@v2
+      - name: Setup Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: "1.18"
 
-    - name: Generate deployment package
-      run: |
-        cd backend/
-        zip -r eb.zip . -x '*.git*' 
-        
+      - name: Install dependencies
+        run: |
+          cd backend/
+          go version
+          go get -d ./...
 
-    - name: Deploy to EB
-      uses: einaregilsson/beanstalk-deploy@v20
-      with:
-        aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        use_existing_version_if_available: true
-        application_name: go base
-        environment_name: Gobase-env
-        version_label: go base-source-1
-        region: us-east-1
-        deployment_package: backend/eb.zip
+      - name: Run build & Generate package
+        run: |
+          cd backend/
+          go build -o build/application
+          zip -r eb.zip . -x '*.git*'
+
+      - name: Deploy to EB
+        uses: einaregilsson/beanstalk-deploy@v20
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          use_existing_version_if_available: true
+          application_name: twclone
+          environment_name: Twclone-env
+          version_label: twclone-source
+          region: us-east-1
+          deployment_package: backend/eb.zip
