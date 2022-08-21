@@ -25,6 +25,6 @@ jobs:
         aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         application_name: go base
         environment_name: Gobase-env
-        version_label: 1
+        version_label: go base-source-1
         region: us-east-1
         deployment_package: backend/eb.zip
