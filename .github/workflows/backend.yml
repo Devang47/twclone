@@ -34,8 +34,8 @@ jobs:
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           use_existing_version_if_available: true
-          application_name: twclone
-          environment_name: Twclone-env
-          version_label: twclone-source
+          application_name: twclone backend
+          environment_name: Twclonebackend-env
+          version_label: twclone latest build
           region: us-east-1
           deployment_package: backend/eb.zip
