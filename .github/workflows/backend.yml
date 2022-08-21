@@ -35,6 +35,6 @@ jobs:
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           application_name: twclone backend
           environment_name: Twclonebackend-env
-          version_label: latest
+          version_label: twc-latest
           region: us-east-1
           deployment_package: backend/eb-latest.zip
