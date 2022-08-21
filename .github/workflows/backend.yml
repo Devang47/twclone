@@ -25,8 +25,8 @@ jobs:
       - name: Run build & Generate package
         run: |
           cd backend/
-          GOOS=linux GOARCH=amd64 go build -o build/application
-          zip -r eb.zip . -x '*.git*'
+          GOOS=linux GOARCH=amd64 go build -o bin/application
+          zip -r eb-latest.zip . -x '*.git*'
 
       - name: Deploy to EB
         uses: einaregilsson/beanstalk-deploy@v20
@@ -37,4 +37,4 @@ jobs:
           environment_name: Twclonebackend-env
           version_label: latest
           region: us-east-1
-          deployment_package: backend/eb.zip
+          deployment_package: backend/eb-latest.zip
