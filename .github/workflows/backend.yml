@@ -25,7 +25,7 @@ jobs:
       - name: Run build & Generate package
         run: |
           cd backend/
-          go build -o build/application
+          GOOS=linux GOARCH=amd64 go build -o build/application
           zip -r eb.zip . -x '*.git*'
 
       - name: Deploy to EB

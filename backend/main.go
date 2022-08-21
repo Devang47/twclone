@@ -15,22 +15,6 @@ import (
 	db "backend/controllers"
 )
 
-// func main() {
-// 	r := mux.NewRouter()
-// 	r.Use(middleware.Logger)
-// 	r.Use(middleware.Recoverer)
-// 	r.Use(middleware.RequestID)
-// 	mux.CORSMethodMiddleware(r)
-
-// 	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-// 		w.Write([]byte("Hello world"))
-// 	})
-
-// 	http.Handle("/", r)
-// 	s := http.Server{Addr: ":8080", Handler: r}
-// 	s.ListenAndServe()
-// }
-
 func main() {
 	r := mux.NewRouter()
 	r.Use(middleware.Logger)
@@ -61,10 +45,10 @@ func main() {
 	d := color.New(color.FgGreen, color.Bold)
 	c := color.New(color.FgGreen)
 	c.Printf("Started backend server at: ")
-	d.Println("8080")
-	d.Println("	➜  http://localhost:8080/")
+	d.Println("5000")
+	d.Println("	➜  http://localhost:5000/")
 
 	http.Handle("/", r)
-	s := http.Server{Addr: ":8080", Handler: r}
+	s := http.Server{Addr: ":5000", Handler: r}
 	s.ListenAndServe()
 }

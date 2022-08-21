@@ -1,4 +1,5 @@
 backend
 .env
 build
-deploy.zip
+eb.zip
+bin/
