@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/fatih/color"
 	"github.com/go-chi/chi/v5/middleware"
@@ -16,6 +17,19 @@ import (
 )
 
 func main() {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "5000"
+	}
+
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("Hello world"))
+	})
+
+	http.ListenAndServe(":"+port, nil)
+}
+
+func main_1() {
 	r := mux.NewRouter()
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
