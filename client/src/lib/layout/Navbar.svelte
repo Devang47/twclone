@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
+
 	import Logo from '$lib/icons/Logo.svelte';
 	import { isAuthenticated, user } from '$store/auth';
 	import auth from '$utils/authService';
@@ -25,10 +27,15 @@
 		<Logo />
 	</div>
 
-	<div class="username">
-		{$user?.name}
-	</div>
+	{#if $user?.name}
+		<div class="username">
+			{$user?.name}
+		</div>
+	{/if}
 
+	{#if !$isAuthenticated}
+		<button class="logout" on:click={() => goto('/login')}> Login </button>
+	{/if}
 	{#if $isAuthenticated}
 		<button class="logout" on:click={logOut}> Logout </button>
 	{/if}

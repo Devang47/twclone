@@ -28,14 +28,11 @@ html {
 body {
 	@apply antialiased;
 	background-color: #151518;
-	height: 100vh;
-	width: 100vw;
-	overflow: hidden;
 }
 
-@import './nav';
-@import './main';
-@import './login';
+@import 'nav';
+@import 'main';
+@import 'login';
 
 .no-scrollbar::-webkit-scrollbar {
 	display: none;
@@ -48,7 +45,7 @@ body {
 }
 
 @supports ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
-	main #app .tweets .tweet {
+	#app .tweets .tweet {
 		@apply bg-[#323236de] backdrop-blur-md;
 	}
 	#login .container .inner-wrapper {

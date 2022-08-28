@@ -9,34 +9,37 @@
 	import Loader from '$lib/components/Loader.svelte';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 	import type { Auth0Client } from '@auth0/auth0-spa-js';
 
 	let auth0Client: Auth0Client;
+	let loading = true;
 
 	onMount(async () => {
 		auth0Client = await auth.createClient();
 		isAuthenticated.set(await auth0Client.isAuthenticated());
 		user.set(await auth0Client.getUser());
 
+		loading = false;
 		console.log($user, auth0Client);
 
 		if ($isAuthenticated) {
-			goto('/');
-		} else {
-			goto('/login');
+			goto($page.url.searchParams.get('next') || '/');
 		}
 	});
 
-	function login() {
-		auth.loginWithPopup(auth0Client, {});
-	}
+	const login = async () => {
+		if (await auth.loginWithPopup(auth0Client, {})) {
+			goto($page.url.searchParams.get('next') || '/');
+		}
+	};
 </script>
 
 <svelte:head>
 	<title>Signin | TWClone</title>
 </svelte:head>
 
-{#if $popupOpen}
+{#if $popupOpen || loading}
 	<Loader />
 {:else}
 	<main>

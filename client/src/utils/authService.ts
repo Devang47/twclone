@@ -1,7 +1,6 @@
 import createAuth0Client, { Auth0Client, type PopupLoginOptions } from '@auth0/auth0-spa-js';
 import { user, isAuthenticated, popupOpen } from '$store/auth';
 import config from '../auth-config';
-import { goto } from '$app/navigation';
 
 async function createClient() {
 	let auth0Client = await createAuth0Client({
@@ -18,9 +17,10 @@ async function loginWithPopup(client: Auth0Client, options?: PopupLoginOptions) 
 		await client.loginWithPopup(options);
 		user.set(await client.getUser());
 		isAuthenticated.set(true);
-		goto('/');
+		return true;
 	} catch (e) {
 		console.error(e);
+		return false;
 	} finally {
 		popupOpen.set(false);
 	}
