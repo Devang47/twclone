@@ -5,10 +5,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/fatih/color"
 	"github.com/go-chi/chi/v5/middleware"
-
-	"go.mongodb.org/mongo-driver/bson"
+	"github.com/joho/godotenv"
 
 	"github.com/gorilla/mux"
 
@@ -16,14 +14,16 @@ import (
 )
 
 func main() {
+	godotenv.Load()
+
 	r := mux.NewRouter()
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.RequestID)
+	r.Use(middleware.RealIP)
 	mux.CORSMethodMiddleware(r)
 
 	client := db.ConnectToDB()
-	db := client.Database("twclone").Collection("temp")
 
 	defer func() {
 		if err := client.Disconnect(context.TODO()); err != nil {
@@ -31,22 +31,29 @@ func main() {
 		}
 	}()
 
-	r.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		vars := mux.Vars(r)
-		fmt.Println(vars)
+	/**
+		{
+	  "given_name": "Devang",
+	  "family_name": "Saklani",
+	  "nickname": "devangsaklani",
+	  "name": "Devang Saklani",
+	  "picture": "https://lh3.googleusercontent.com/a-/AFdZucr7NVUE9C66t4IYhwq-oIkyrDbYDkR-h6DhhWB5lwc=s96-c",
+	  "locale": "en",
+	  "updated_at": "2022-08-28T15:31:39.108Z",
+	  "email": "devangsaklani@gmail.com",
+	  "email_verified": true,
+	  "sub": "google-oauth2|101176798958313563407"
+	}
+	*/
 
-		doc := bson.D{{"foo", "bar"}, {"hello", "world"}, {"pi", 3.14159}, {"id", vars["id"]}}
+	r.HandleFunc("/create-user", func(w http.ResponseWriter, r *http.Request) {
+		database := client.Database("twclone").Collection("users")
+		db.CreateUser(w, r, database)
+	}).Methods("POST")
 
-		db.InsertOne(context.TODO(), doc)
-
-		w.Write([]byte("Hello world from main.go"))
-	}).Methods("GET").Schemes("http")
-
-	d := color.New(color.FgGreen, color.Bold)
-	c := color.New(color.FgGreen)
-	c.Printf("Started backend server at: ")
-	d.Println("5000")
-	d.Println("	➜  http://localhost:5000/")
+	fmt.Printf("Started backend server at: ")
+	fmt.Println("5000")
+	fmt.Println("	➜  http://localhost:5000/")
 
 	http.Handle("/", r)
 	s := http.Server{Addr: ":5000", Handler: r}
