@@ -45,6 +45,11 @@ func main() {
 	}
 	*/
 
+	r.HandleFunc("/get-uuid/{id}", func(w http.ResponseWriter, r *http.Request) {
+		database := client.Database("twclone").Collection("users")
+		db.GetUuid(w, r, database)
+	}).Methods("GET")
+
 	r.HandleFunc("/create-user", func(w http.ResponseWriter, r *http.Request) {
 		database := client.Database("twclone").Collection("users")
 		db.CreateUser(w, r, database)
@@ -59,10 +64,13 @@ func main() {
 	r.HandleFunc("/get-tweets", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("content-Type", "application/json")
 		w.Header().Set("access-control-allow-origin", "https://twclone.saklani.dev")
+		w.Header().Set("access-control-allow-headers", "Content-Type")
+		w.Header().Set("Access-Control-Allow-Methods", "OPTIONS,GET")
+
 		database := client.Database("twclone").Collection("tweets")
 		db.GetAllTweets(w, r, database)
 
-	}).Methods("GET")
+	}).Methods("GET", http.MethodOptions)
 
 	r.HandleFunc("/post-tweet", func(w http.ResponseWriter, r *http.Request) {
 		database := client.Database("twclone").Collection("tweets")

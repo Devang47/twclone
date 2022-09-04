@@ -64,3 +64,18 @@ func GetUser(w http.ResponseWriter, r *http.Request, db *mongo.Collection) {
 		w.WriteHeader(http.StatusOK)
 	}
 }
+
+func GetUuid(w http.ResponseWriter, r *http.Request, db *mongo.Collection) {
+	vars := mux.Vars(r)["id"]
+	user := GetFromDB(db, "email", vars)
+
+	if user == nil {
+		w.WriteHeader(http.StatusNotFound)
+		jsonRes, _ := json.Marshal(Response{Msg: "Not found!"})
+		w.Write(jsonRes)
+	} else {
+		jsonUser, _ := json.Marshal(user)
+		w.Write(jsonUser)
+		w.WriteHeader(http.StatusOK)
+	}
+}
