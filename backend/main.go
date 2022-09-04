@@ -57,8 +57,11 @@ func main() {
 	}).Methods("GET")
 
 	r.HandleFunc("/get-tweets", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("content-Type", "application/json")
+		w.Header().Set("access-control-allow-origin", "https://twclone.saklani.dev")
 		database := client.Database("twclone").Collection("tweets")
 		db.GetAllTweets(w, r, database)
+
 	}).Methods("GET")
 
 	r.HandleFunc("/post-tweet", func(w http.ResponseWriter, r *http.Request) {
