@@ -19,9 +19,7 @@ func main() {
 
 	r := mux.NewRouter()
 	r.Use(middleware.Logger)
-	r.Use(middleware.Recoverer)
-	r.Use(middleware.RequestID)
-	r.Use(middleware.RealIP)
+	r.Use(handlers.RecoveryHandler())
 	// r.Use(mux.CORSMethodMiddleware(r))
 
 	client := db.ConnectToDB()
@@ -61,25 +59,16 @@ func main() {
 	r.HandleFunc("/get-tweets", func(w http.ResponseWriter, r *http.Request) {
 		database := client.Database("twclone").Collection("tweets")
 		db.GetAllTweets(w, r, database)
-
 	}).Methods("GET")
 
 	r.HandleFunc("/post-tweet", func(w http.ResponseWriter, r *http.Request) {
 		database := client.Database("twclone").Collection("tweets")
 		db.AddTweet(w, r, database)
-
 	}).Methods("POST")
 
 	fmt.Printf("Started backend server at: ")
 	fmt.Println("5000")
 	fmt.Println("➜  http://localhost:5000/")
-
-	// http.Handle("/", r)
-
-	// Where ORIGIN_ALLOWED is like `scheme://dns[:port]`, or `*` (insecure)
-	// headersOk := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type"})
-	// originsOk := handlers.AllowedOrigins([]string{"*"})
-	// methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT"})
 
 	http.ListenAndServe(":5000", handlers.CORS()(r))
 }
