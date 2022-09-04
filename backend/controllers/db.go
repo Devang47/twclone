@@ -1,21 +1,21 @@
 package db
 
 import (
-	"backend/models"
 	"context"
-	"encoding/json"
 	"fmt"
 	"log"
-	"net/http"
 	"os"
 
-	"github.com/google/uuid"
 	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
+
+type Response struct {
+	Msg string `json:"msg"`
+}
 
 func ConnectToDB() *mongo.Client {
 	URI := os.Getenv("URI")
@@ -45,37 +45,4 @@ func GetFromDB(db *mongo.Collection, key string, value any) []bson.M {
 	}
 
 	return results
-}
-
-func CreateUser(w http.ResponseWriter, r *http.Request, db *mongo.Collection) {
-
-	// Convert JSON body to Object
-	var user models.User
-	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
-		log.Fatal("decode error")
-	}
-
-	// Check if the user already exists
-	results := GetFromDB(db, "email", user.Email)
-
-	// If it's a new user
-	if results == nil {
-		// Give UUID to user
-		user.Uid = uuid.NewString()
-
-		res, _ := db.InsertOne(context.TODO(), user)
-		fmt.Println(res)
-
-		results := GetFromDB(db, "_id", res.InsertedID)
-
-		userData, _ := json.Marshal(results[0])
-		w.Write(userData)
-		w.WriteHeader(http.StatusCreated)
-	} else {
-		// User Exists
-		res, _ := json.Marshal(results[0])
-		w.Write(res)
-		w.WriteHeader(http.StatusAccepted)
-	}
-
 }

@@ -8,6 +8,7 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/joho/godotenv"
 
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 
 	db "backend/controllers"
@@ -21,7 +22,7 @@ func main() {
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.RequestID)
 	r.Use(middleware.RealIP)
-	mux.CORSMethodMiddleware(r)
+	// r.Use(mux.CORSMethodMiddleware(r))
 
 	client := db.ConnectToDB()
 
@@ -51,11 +52,34 @@ func main() {
 		db.CreateUser(w, r, database)
 	}).Methods("POST")
 
+	r.HandleFunc("/user/{id}", func(w http.ResponseWriter, r *http.Request) {
+		database := client.Database("twclone").Collection("users")
+		db.GetUser(w, r, database)
+
+	}).Methods("GET")
+
+	r.HandleFunc("/get-tweets", func(w http.ResponseWriter, r *http.Request) {
+		database := client.Database("twclone").Collection("tweets")
+		db.GetAllTweets(w, r, database)
+
+	}).Methods("GET")
+
+	r.HandleFunc("/post-tweet", func(w http.ResponseWriter, r *http.Request) {
+		database := client.Database("twclone").Collection("tweets")
+		db.AddTweet(w, r, database)
+
+	}).Methods("POST")
+
 	fmt.Printf("Started backend server at: ")
 	fmt.Println("5000")
-	fmt.Println("	➜  http://localhost:5000/")
+	fmt.Println("➜  http://localhost:5000/")
 
-	http.Handle("/", r)
-	s := http.Server{Addr: ":5000", Handler: r}
-	s.ListenAndServe()
+	// http.Handle("/", r)
+
+	// Where ORIGIN_ALLOWED is like `scheme://dns[:port]`, or `*` (insecure)
+	// headersOk := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type"})
+	// originsOk := handlers.AllowedOrigins([]string{"*"})
+	// methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT"})
+
+	http.ListenAndServe(":5000", handlers.CORS()(r))
 }
