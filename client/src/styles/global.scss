@@ -44,7 +44,84 @@ body {
 	scrollbar-width: none; /* Firefox */
 }
 
+.input {
+	@apply px-5 py-2 relative z-10;
+	.textarea {
+		@apply h-[150px] w-full bg-[#27272a] rounded-[13px] relative duration-75 ease-linear;
+
+		&:focus-within {
+			outline: 3px solid #47474a;
+			outline-offset: 1.5px;
+		}
+	}
+
+	textarea {
+		@apply resize-none text-[#BEBEBE] leading-6 h-full outline-none border-none w-full bg-transparent font-medium pb-4 px-6 sm:px-[2.5rem] py-5;
+	}
+
+	button {
+		@apply mt-4 block w-fit bg-[#D7D7D7] py-2 px-2 rounded-[30px] ml-auto absolute bottom-4 right-6 focus:outline;
+		svg {
+			@apply w-5 translate-x-0.5;
+		}
+	}
+}
+
+.tweets {
+	@apply flex items-center justify-center overflow-y-scroll px-5 py-4 mt-6 flex-col gap-10 pb-10 relative z-10;
+
+	.tweet {
+		@apply rounded-[13px] bg-[#323236] px-6 sm:px-[2.5rem] py-4 pt-6 relative;
+
+		.tweet-header {
+			@apply flex items-center gap-3;
+		}
+
+		h2 {
+			@apply text-[#D7D7D7] font-bold text-lg hover:text-[#ffffff] duration-200 ease-in cursor-pointer;
+		}
+
+		.published-date {
+			@apply text-white text-opacity-30 text-sm;
+		}
+
+		p {
+			@apply text-[#BEBEBE] mt-1.5 font-medium leading-[1.6];
+		}
+
+		.action-btns {
+			@apply mt-4 flex items-center gap-3;
+
+			button {
+				@apply p-2 h-[35px] w-[35px]
+					flex items-center justify-center justify-items-center rounded-full  hover:bg-[#ffffff0f] active:bg-[#ffffff21] duration-100;
+			}
+
+			button:first-of-type {
+				svg {
+					@apply w-[20px];
+				}
+			}
+
+			svg {
+				@apply w-[20px];
+			}
+		}
+
+		.options {
+			@apply flex items-center justify-center gap-[3px] flex-col w-8 absolute top-5 right-4 h-8 hover:bg-[#ffffff0f] active:bg-[#ffffff21] duration-100 rounded-full cursor-pointer;
+			span {
+				@apply bg-[#D7D7D7] h-[3px] w-[3px] rounded-full;
+			}
+		}
+	}
+}
+
 @supports ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
+	.input .textarea {
+		@apply bg-[#27272ac8] backdrop-blur-md;
+	}
+
 	#app .tweets .tweet {
 		@apply bg-[#323236de] backdrop-blur-md;
 	}

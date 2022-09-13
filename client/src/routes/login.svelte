@@ -11,17 +11,25 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import type { Auth0Client } from '@auth0/auth0-spa-js';
+	import { createUser, getUser } from '$utils/api/user';
 
 	let auth0Client: Auth0Client;
-	let loading = true;
+	let loading = false;
 
 	onMount(async () => {
 		auth0Client = await auth.createClient();
 		isAuthenticated.set(await auth0Client.isAuthenticated());
-		user.set(await auth0Client.getUser());
+
+		const data = await auth0Client.getUser();
+
+		if (data?.email) {
+			const userdata = await getUser(data.email);
+			if (!userdata) return goto('/login', { replaceState: true });
+
+			user.set(userdata[0]);
+		}
 
 		loading = false;
-		console.log($user, auth0Client);
 
 		if ($isAuthenticated) {
 			goto($page.url.searchParams.get('next') || '/');
@@ -30,6 +38,7 @@
 
 	const login = async () => {
 		if (await auth.loginWithPopup(auth0Client, {})) {
+			console.log($user);
 			goto($page.url.searchParams.get('next') || '/');
 		}
 	};

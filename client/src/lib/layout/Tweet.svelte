@@ -1,19 +1,38 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { scale } from 'svelte/transition';
 
 	import Heart from '$lib/icons/Heart.svelte';
 	import Retweet from '$lib/icons/Retweet.svelte';
 
-	export let data: any;
+	export let data: Tweet;
 </script>
 
-<div class="tweet">
-	<h2 class="author" on:click={() => goto('/')}>Devang Saklani</h2>
+<!-- {
+    "_id": "630f6d8d7274a9291225d764",
+    "author": "devang",
+    "likes": {
+        "likedby": null,
+        "totallikes": 0
+    },
+    "publishedon": "2022-08-31 19:47:49.408663 +0530 IST m=+1.676021168",
+    "tweet": "deva2314sdfsjhgsdfd2ng@ag.com"
+} -->
+
+<div class="tweet w-full" transition:scale={{ duration: 0.3, start: 0.5, opacity: 0.5 }}>
+	<div class="tweet-header">
+		<h2 class="author w-fit" on:click={() => goto('/')}>{data.author}</h2>
+		<div class="published-date">
+			{new Date(data.published_on).toLocaleDateString('en-US', {
+				year: 'numeric',
+				month: 'short',
+				day: 'numeric'
+			})}
+		</div>
+	</div>
 
 	<p>
-		Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sit earum non quas suscipit!
-		Architecto, neque, provident ut non alias eos vitae quam impedit, quaerat molestias laudantium
-		sint voluptas minima nobis!
+		{data.tweet}
 	</p>
 
 	<div class="action-btns">

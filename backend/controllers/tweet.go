@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -26,6 +27,7 @@ func AddTweet(w http.ResponseWriter, r *http.Request, db *mongo.Collection) {
 
 	currentTime := time.Now()
 	tweet.PublishedOn = currentTime.Format("2006-01-02 15:04:05.000000")
+	tweet.Id = uuid.NewString()
 
 	_, err := db.InsertOne(context.TODO(), tweet)
 	if err != nil {

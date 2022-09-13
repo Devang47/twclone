@@ -7,11 +7,13 @@ import (
 
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/joho/godotenv"
+	"github.com/rs/cors"
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 
 	db "backend/controllers"
+	authM "backend/middleware"
 )
 
 func main() {
@@ -20,7 +22,7 @@ func main() {
 	r := mux.NewRouter()
 	r.Use(middleware.Logger)
 	r.Use(handlers.RecoveryHandler())
-	// r.Use(mux.CORSMethodMiddleware(r))
+	r.Use(mux.CORSMethodMiddleware(r))
 
 	client := db.ConnectToDB()
 
@@ -30,56 +32,55 @@ func main() {
 		}
 	}()
 
-	/**
-		{
-	  "given_name": "Devang",
-	  "family_name": "Saklani",
-	  "nickname": "devangsaklani",
-	  "name": "Devang Saklani",
-	  "picture": "https://lh3.googleusercontent.com/a-/AFdZucr7NVUE9C66t4IYhwq-oIkyrDbYDkR-h6DhhWB5lwc=s96-c",
-	  "locale": "en",
-	  "updated_at": "2022-08-28T15:31:39.108Z",
-	  "email": "devangsaklani@gmail.com",
-	  "email_verified": true,
-	  "sub": "google-oauth2|101176798958313563407"
-	}
-	*/
-
 	r.HandleFunc("/get-uuid/{id}", func(w http.ResponseWriter, r *http.Request) {
 		database := client.Database("twclone").Collection("users")
 		db.GetUuid(w, r, database)
-	}).Methods("GET")
+
+	}).Methods(http.MethodGet, http.MethodOptions)
 
 	r.HandleFunc("/create-user", func(w http.ResponseWriter, r *http.Request) {
 		database := client.Database("twclone").Collection("users")
 		db.CreateUser(w, r, database)
-	}).Methods("POST")
+
+	}).Methods(http.MethodPost, http.MethodOptions)
 
 	r.HandleFunc("/user/{id}", func(w http.ResponseWriter, r *http.Request) {
 		database := client.Database("twclone").Collection("users")
 		db.GetUser(w, r, database)
 
-	}).Methods("GET")
+	}).Methods(http.MethodGet, http.MethodOptions)
 
 	r.HandleFunc("/get-tweets", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("content-Type", "application/json")
-		w.Header().Set("access-control-allow-origin", "https://twclone.saklani.dev")
-		w.Header().Set("access-control-allow-headers", "Content-Type")
-		w.Header().Set("Access-Control-Allow-Methods", "OPTIONS,GET")
+		// w.Header().Set("Access-Control-Allow-Headers", " Authorization")
+		database := client.Database("twclone").Collection("users")
+		authM.AuthMiddleware(w, r, database, func() {
+			database = client.Database("twclone").Collection("tweets")
+			db.GetAllTweets(w, r, database)
+		})
 
-		database := client.Database("twclone").Collection("tweets")
-		db.GetAllTweets(w, r, database)
-
-	}).Methods("GET", http.MethodOptions)
+	}).Methods(http.MethodGet, http.MethodPost, http.MethodOptions)
 
 	r.HandleFunc("/post-tweet", func(w http.ResponseWriter, r *http.Request) {
-		database := client.Database("twclone").Collection("tweets")
-		db.AddTweet(w, r, database)
-	}).Methods("POST")
+		database := client.Database("twclone").Collection("users")
+		authM.AuthMiddleware(w, r, database, func() {
+			database = client.Database("twclone").Collection("tweets")
+			db.AddTweet(w, r, database)
+		})
+
+	}).Methods("POST", http.MethodOptions)
 
 	fmt.Printf("Started backend server at: ")
 	fmt.Println("5000")
 	fmt.Println("➜  http://localhost:5000/")
 
-	http.ListenAndServe(":5000", handlers.CORS()(r))
+	c := cors.New(cors.Options{
+		AllowedOrigins:   []string{"*"},
+		AllowCredentials: true,
+		AllowedMethods:   []string{"GET", "DELETE", "POST", "PUT", "OPTIONS"},
+		AllowedHeaders:   []string{"Content-type", "Authorization"},
+	})
+
+	handler := c.Handler(r)
+	http.ListenAndServe(":5000", handler)
+	http.Handle("/", r)
 }
