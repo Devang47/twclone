@@ -1,9 +1,9 @@
 package db
 
 import (
-	"backend/models"
 	"context"
 	"encoding/json"
+	"main/models"
 	"net/http"
 
 	"github.com/google/uuid"

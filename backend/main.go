@@ -5,69 +5,26 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/go-chi/chi/v5/middleware"
 	"github.com/joho/godotenv"
 	"github.com/rs/cors"
+	"go.mongodb.org/mongo-driver/mongo"
 
-	"github.com/gorilla/handlers"
-	"github.com/gorilla/mux"
-
-	db "backend/controllers"
-	authM "backend/middleware"
+	db "main/controllers"
 )
+
+var Client *mongo.Client
 
 func main() {
 	godotenv.Load()
 
-	r := mux.NewRouter()
-	r.Use(middleware.Logger)
-	r.Use(handlers.RecoveryHandler())
-	r.Use(mux.CORSMethodMiddleware(r))
-
-	client := db.ConnectToDB()
+	Client = db.ConnectToDB()
+	r := SetupRoutes()
 
 	defer func() {
-		if err := client.Disconnect(context.TODO()); err != nil {
+		if err := Client.Disconnect(context.TODO()); err != nil {
 			panic(err)
 		}
 	}()
-
-	r.HandleFunc("/get-uuid/{id}", func(w http.ResponseWriter, r *http.Request) {
-		database := client.Database("twclone").Collection("users")
-		db.GetUuid(w, r, database)
-
-	}).Methods(http.MethodGet, http.MethodOptions)
-
-	r.HandleFunc("/create-user", func(w http.ResponseWriter, r *http.Request) {
-		database := client.Database("twclone").Collection("users")
-		db.CreateUser(w, r, database)
-
-	}).Methods(http.MethodPost, http.MethodOptions)
-
-	r.HandleFunc("/user/{id}", func(w http.ResponseWriter, r *http.Request) {
-		database := client.Database("twclone").Collection("users")
-		db.GetUser(w, r, database)
-
-	}).Methods(http.MethodGet, http.MethodOptions)
-
-	r.HandleFunc("/get-tweets", func(w http.ResponseWriter, r *http.Request) {
-		// w.Header().Set("Access-Control-Allow-Headers", " Authorization")
-		database := client.Database("twclone").Collection("users")
-		authM.AuthMiddleware(w, r, database, func() {
-			database = client.Database("twclone").Collection("tweets")
-			db.GetAllTweets(w, r, database)
-		})
-
-	}).Methods(http.MethodGet, http.MethodPost, http.MethodOptions)
-
-	r.HandleFunc("/post-tweet", func(w http.ResponseWriter, r *http.Request) {
-		database := client.Database("twclone").Collection("users")
-		authM.AuthMiddleware(w, r, database, func() {
-			database = client.Database("twclone").Collection("tweets")
-			db.AddTweet(w, r, database)
-		})
-
-	}).Methods("POST", http.MethodOptions)
 
 	fmt.Printf("Started backend server at: ")
 	fmt.Println("5000")

@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	db "backend/controllers"
 	"encoding/json"
+	db "main/controllers"
 	"net/http"
 
 	"go.mongodb.org/mongo-driver/mongo"

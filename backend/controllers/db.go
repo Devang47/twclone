@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"main/models"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -40,6 +41,21 @@ func GetFromDB(db *mongo.Collection, key string, value any) []bson.M {
 	}
 
 	var results []bson.M
+	if err = cursor.All(context.TODO(), &results); err != nil {
+		log.Fatal(err)
+	}
+
+	return results
+}
+
+func GetTweetFromDB(db *mongo.Collection, key string, value any) []models.Tweet {
+
+	cursor, err := db.Find(context.TODO(), bson.D{primitive.E{Key: key, Value: value}})
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var results []models.Tweet
 	if err = cursor.All(context.TODO(), &results); err != nil {
 		log.Fatal(err)
 	}
