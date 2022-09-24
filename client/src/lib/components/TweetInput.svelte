@@ -1,17 +1,38 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+
 	let tweetInput = '';
+	let tweetInputBox: HTMLTextAreaElement;
 
 	export let onSubmit: (e: string) => Promise<boolean>;
 
 	const handleSubmit = () => {
+		tweetInput = tweetInput.trim();
+		if (!tweetInput) return;
+
 		onSubmit(tweetInput);
 		tweetInput = '';
 	};
+
+	onMount(() => {
+		tweetInputBox.addEventListener('keypress', (e) => {
+			if (innerWidth < 640) return;
+
+			if (e.key === 'Enter' && e.shiftKey) {
+				e.preventDefault();
+				tweetInput += '\r\n';
+			} else if (e.key === 'Enter') {
+				e.preventDefault();
+				handleSubmit();
+			}
+		});
+	});
 </script>
 
-<form class="textarea" on:submit|preventDefault={handleSubmit}>
+<div class="textarea">
 	<textarea
 		bind:value={tweetInput}
+		bind:this={tweetInputBox}
 		name="create-new-tweet"
 		id="create-tweet"
 		cols="30"
@@ -21,7 +42,7 @@
 		placeholder="Write Something..."
 	/>
 	<div class="cshadow" />
-	<button>
+	<button on:click={handleSubmit}>
 		<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"
 			><path
 				fill="currentColor"
@@ -29,4 +50,4 @@
 			/></svg
 		>
 	</button>
-</form>
+</div>

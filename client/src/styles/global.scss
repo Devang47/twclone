@@ -38,20 +38,22 @@ body {
 	display: none;
 }
 
-/* Hide scrollbar for IE, Edge and Firefox */
 .no-scrollbar {
-	-ms-overflow-style: none; /* IE and Edge */
-	scrollbar-width: none; /* Firefox */
+	scrollbar-width: none;
 }
 
 .input {
 	@apply px-5 py-2 relative z-10;
 	.textarea {
-		@apply h-[150px] w-full bg-[#27272a] rounded-[13px] relative duration-75 ease-linear;
+		@apply h-[150px] w-full bg-[#27272a] rounded-[13px] relative duration-150 ease-linear;
+		box-shadow: 0px 15px 18px rgba(0, 0, 0, 0.14), 0px 6.26664px 7.51997px rgba(0, 0, 0, 0.10064),
+			0px 3.35045px 4.02054px rgba(0, 0, 0, 0.083455), 0px 1.87823px 2.25388px rgba(0, 0, 0, 0.07),
+			0px 0.997515px 1.19702px rgba(0, 0, 0, 0.056545),
+			0px 0.415088px 0.498106px rgba(0, 0, 0, 0.0393604);
 
 		&:focus-within {
-			outline: 3px solid #47474a;
-			outline-offset: 1.5px;
+			outline: 2px solid #e5e5e6;
+			outline-offset: 2px;
 		}
 	}
 
@@ -60,7 +62,7 @@ body {
 	}
 
 	button {
-		@apply mt-4 block w-fit bg-[#D7D7D7] py-2 px-2 rounded-[30px] ml-auto absolute bottom-4 right-6 focus:outline;
+		@apply mt-4 block w-fit bg-[#D7D7D7] py-2 px-2 rounded-[30px] ml-auto absolute bottom-4 right-6 hover:scale-105 duration-100 hover:-rotate-12;
 		svg {
 			@apply w-5 translate-x-0.5;
 		}
@@ -72,6 +74,10 @@ body {
 
 	.tweet {
 		@apply rounded-[13px] bg-[#323236] px-6 sm:px-[2.5rem] py-4 pt-6 relative;
+		box-shadow: 0px 15px 18px rgba(0, 0, 0, 0.14), 0px 6.26664px 7.51997px rgba(0, 0, 0, 0.10064),
+			0px 3.35045px 4.02054px rgba(0, 0, 0, 0.083455), 0px 1.87823px 2.25388px rgba(0, 0, 0, 0.07),
+			0px 0.997515px 1.19702px rgba(0, 0, 0, 0.056545),
+			0px 0.415088px 0.498106px rgba(0, 0, 0, 0.0393604);
 
 		.tweet-header {
 			@apply flex items-center gap-3;
@@ -95,10 +101,20 @@ body {
 			button {
 				@apply p-2 h-[35px] w-[35px]
 					flex items-center justify-center justify-items-center rounded-full  hover:bg-[#ffffff0f] active:bg-[#ffffff21] duration-100;
+
+				svg path {
+				}
+			}
+
+			.likedByUser {
+				svg path {
+					@apply fill-complementary stroke-complementary;
+				}
 			}
 
 			button:first-of-type {
 				svg {
+					stroke: #d7d7d7;
 					@apply w-[20px];
 				}
 			}

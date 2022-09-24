@@ -1,8 +1,8 @@
 import createAuth0Client, { Auth0Client, type PopupLoginOptions } from '@auth0/auth0-spa-js';
-import { user, isAuthenticated, popupOpen } from '$store/auth';
+import { user, isAuthenticated } from '$store/auth';
 import config from '../auth-config';
-import { get } from 'svelte/store';
 import { createUser } from '$utils/api/user';
+import { loading } from '$store';
 
 async function createClient() {
 	let auth0Client = await createAuth0Client({
@@ -15,7 +15,7 @@ async function createClient() {
 }
 
 async function loginWithPopup(client: Auth0Client, options?: PopupLoginOptions) {
-	popupOpen.set(true);
+	loading.set(true);
 	try {
 		await client.loginWithPopup(options);
 		let userData = await client.getUser();
@@ -27,7 +27,7 @@ async function loginWithPopup(client: Auth0Client, options?: PopupLoginOptions) 
 		console.error(e);
 		return false;
 	} finally {
-		popupOpen.set(false);
+		loading.set(false);
 	}
 }
 

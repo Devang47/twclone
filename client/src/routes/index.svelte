@@ -4,32 +4,13 @@
 	import ArrowBottom from '$lib/icons/ArrowBottom.svelte';
 	import TweetsBg from '$lib/layout/TweetsBG.svelte';
 	import TweetInput from '$lib/components/TweetInput.svelte';
-	import { tweetsData } from '$store';
-	import { getTweets, postTweets } from '$utils/api/tweets';
-	import { user } from '$store/auth';
+	import { loading, tweetsData } from '$store';
+	import { onMount } from 'svelte';
+	import { handlePostTweet } from '$utils/tweet';
 
-	const postTweet = async (e: string) => {
-		try {
-			let authKey = $user?.uid as string;
-
-			await postTweets(authKey, {
-				id: '',
-				author: $user?.username as string,
-				author_uid: $user?.uid as string,
-				tweet: e,
-				published_on: '',
-				likes: { total_likes: 0, liked_by: [] }
-			});
-
-			const res = await getTweets(authKey);
-			$tweetsData = res.data;
-
-			return true;
-		} catch (error) {
-			console.log(error);
-			return false;
-		}
-	};
+	onMount(() => {
+		$loading = false;
+	});
 </script>
 
 <svelte:head>
@@ -40,12 +21,12 @@
 	<TweetsBg />
 	<section id="app">
 		<div class="input">
-			<TweetInput onSubmit={postTweet} />
+			<TweetInput onSubmit={handlePostTweet} />
 		</div>
 
 		<div class="tweets">
 			{#if $tweetsData?.length}
-				{#each $tweetsData.reverse() as item}
+				{#each $tweetsData as item (item.id)}
 					<Tweet data={item} />
 				{/each}
 			{/if}

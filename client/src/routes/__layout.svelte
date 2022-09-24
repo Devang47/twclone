@@ -3,10 +3,10 @@
 	import { onMount } from 'svelte';
 
 	import '$styles/global.scss';
+	import Loader from '$lib/components/Loader.svelte';
+	import { loading } from '$store';
 
-	let isLoading = true;
 	onMount(() => {
-		isLoading = false;
 		addObserver();
 	});
 
@@ -36,6 +36,10 @@
 	<link rel="icon" type="image/svg+xml" href="/favicon/favicon.svg" />
 	<link rel="icon" type="image/png" href="/favicon/favicon.png" />
 </svelte:head>
+
+{#if $loading}
+	<Loader />
+{/if}
 
 <ProgressBar />
 <slot />

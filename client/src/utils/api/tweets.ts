@@ -4,7 +4,7 @@ import { get } from 'svelte/store';
 import { apiAddr } from './base';
 
 export const getTweets = async (token: string) => {
-	const res = await axios.get(apiAddr + '/get-tweets', {
+	const res = await axios.get(apiAddr + '/get-tweets?limit=15', {
 		headers: {
 			Authorization: token
 		}
@@ -24,5 +24,18 @@ export const postTweets = async (token: string, tweet: Tweet) => {
 			}
 		}
 	);
+	return res;
+};
+
+export const likeTweet = async (token: string, id: string) => {
+	const res = await axios.get(apiAddr + '/like-tweet', {
+		params: {
+			id
+		},
+		headers: {
+			Authorization: token
+		}
+	});
+
 	return res;
 };

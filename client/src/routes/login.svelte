@@ -5,16 +5,15 @@
 	import BlobGreen from '$lib/icons/BlobGreen.svelte';
 	import auth from '$utils/authService';
 	import { isAuthenticated, user } from '$store/auth';
-	import { popupOpen } from '$store/auth';
 	import Loader from '$lib/components/Loader.svelte';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import type { Auth0Client } from '@auth0/auth0-spa-js';
 	import { createUser, getUser } from '$utils/api/user';
+	import { loading } from '$store';
 
 	let auth0Client: Auth0Client;
-	let loading = false;
 
 	onMount(async () => {
 		auth0Client = await auth.createClient();
@@ -29,7 +28,7 @@
 			user.set(userdata[0]);
 		}
 
-		loading = false;
+		$loading = false;
 
 		if ($isAuthenticated) {
 			goto($page.url.searchParams.get('next') || '/');
@@ -48,31 +47,27 @@
 	<title>Signin | TWClone</title>
 </svelte:head>
 
-{#if $popupOpen || loading}
-	<Loader />
-{:else}
-	<main>
-		<section id="login">
-			<div class="container">
-				<div class="blob-1">
-					<BlobBlue />
-				</div>
-				<div class="blob-2">
-					<BlobGreen />
-				</div>
-				<div class="inner-wrapper">
-					<div class="">
-						<div class="logo">
-							<Logo />
-						</div>
-						<h1>Login into <span> TWCLONE </span></h1>
-						<button on:click={login}>
-							Login
-							<ArrowRight />
-						</button>
+<main>
+	<section id="login">
+		<div class="container">
+			<div class="blob-1">
+				<BlobBlue />
+			</div>
+			<div class="blob-2">
+				<BlobGreen />
+			</div>
+			<div class="inner-wrapper">
+				<div class="">
+					<div class="logo">
+						<Logo />
 					</div>
+					<h1>Login into <span> TWCLONE </span></h1>
+					<button on:click={login}>
+						Login
+						<ArrowRight />
+					</button>
 				</div>
 			</div>
-		</section>
-	</main>
-{/if}
+		</div>
+	</section>
+</main>
