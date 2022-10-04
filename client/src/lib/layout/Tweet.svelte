@@ -70,7 +70,7 @@
 		</button>
 	</div>
 
-	{#if data.author_uid !== $user?.uid}
+	{#if data.author_uid === $user?.uid}
 		<button class="options" on:click|stopPropagation={() => (optionsMenuOpen = !optionsMenuOpen)}>
 			{#each new Array(3) as _}
 				<span />
