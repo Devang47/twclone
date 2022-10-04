@@ -5,3 +5,4 @@ This project is clone of twitter, which was created by to practice my golang, mo
 - Sveltekit & Tailwind
 - Mongodb
 - Golang (mux)
+- Bash
