@@ -14,7 +14,6 @@
 	let likedByUser: boolean;
 	onMount(() => {
 		likedByUser = Boolean(data.likes.liked_by.find((e) => e === $user?.username));
-		console.log({ likedByUser });
 	});
 
 	const likeTweet = async () => {
@@ -39,7 +38,16 @@
 
 <div class="tweet w-full" transition:scale={{ start: 0.9, opacity: 0.8 }}>
 	<div class="tweet-header">
-		<h2 class="author w-fit" on:click={() => goto('/')}>{data.author}</h2>
+		<h2
+			class="author w-fit"
+			on:click={() => {
+				tweetsData.set([]);
+				loading.set(true);
+				goto('/user/' + data.author_uid, { replaceState: true });
+			}}
+		>
+			{data.author}
+		</h2>
 		<div class="published-date">
 			{new Date(data.published_on).toLocaleDateString('en-US', {
 				year: 'numeric',

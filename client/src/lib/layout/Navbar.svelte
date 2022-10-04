@@ -23,13 +23,13 @@
 </script>
 
 <nav>
-	<div class="logo">
+	<div class="logo cursor-pointer" on:click={() => goto('/')}>
 		<Logo />
 	</div>
 
-	{#if $user?.name}
+	{#if $user?.username}
 		<div class="username">
-			{$user?.name}
+			{$user?.username}
 		</div>
 	{/if}
 

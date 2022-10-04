@@ -1,16 +1,18 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { createEventDispatcher, onMount } from 'svelte';
+	import { handlePostTweet } from '$utils/tweet';
 
 	let tweetInput = '';
 	let tweetInputBox: HTMLTextAreaElement;
 
-	export let onSubmit: (e: string) => Promise<boolean>;
+	let eventDispatcher = createEventDispatcher();
 
-	const handleSubmit = () => {
+	const handleSubmit = async () => {
 		tweetInput = tweetInput.trim();
 		if (!tweetInput) return;
 
-		onSubmit(tweetInput);
+		await handlePostTweet(tweetInput);
+		eventDispatcher('tweet-created');
 		tweetInput = '';
 	};
 

@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -45,7 +46,8 @@ func AddTweet(w http.ResponseWriter, r *http.Request, db *mongo.Collection) {
 
 }
 
-func GetAllTweets(w http.ResponseWriter, r *http.Request, db *mongo.Collection, limit string) {
+func GetAllTweets(w http.ResponseWriter, r *http.Request, db *mongo.Collection) {
+	limit := r.FormValue("limit")
 
 	i, err := strconv.Atoi(limit)
 	if err != nil {
@@ -55,6 +57,39 @@ func GetAllTweets(w http.ResponseWriter, r *http.Request, db *mongo.Collection, 
 	opts := options.Find().SetSort(bson.D{{Key: "published_on", Value: -1}}).SetLimit(int64(i))
 
 	cursor, err := db.Find(context.TODO(), bson.D{primitive.E{}}, opts)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var results []bson.M
+	if err = cursor.All(context.TODO(), &results); err != nil {
+		log.Fatal(err)
+	}
+
+	jsonTweets, err := json.Marshal(results)
+	if err != nil {
+		jsonRes, _ := json.Marshal(Response{Msg: "Invalid json!"})
+		w.Write(jsonRes)
+		w.WriteHeader(http.StatusNotAcceptable)
+		return
+	}
+
+	w.Write(jsonTweets)
+	w.WriteHeader(http.StatusOK)
+}
+
+func GetAllTweetsByUser(w http.ResponseWriter, r *http.Request, db *mongo.Collection) {
+	vars := mux.Vars(r)["id"]
+	limit := r.FormValue("limit")
+
+	i, err := strconv.Atoi(limit)
+	if err != nil {
+		panic(err)
+	}
+
+	opts := options.Find().SetSort(bson.D{{Key: "published_on", Value: -1}}).SetLimit(int64(i))
+
+	cursor, err := db.Find(context.TODO(), bson.D{primitive.E{Key: "author_uid", Value: vars}}, opts)
 	if err != nil {
 		log.Fatal(err)
 	}

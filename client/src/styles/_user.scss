@@ -5,6 +5,7 @@ body {
 
 main {
 	section {
+		@apply mt-[60px];
 		.banner {
 			@apply w-full h-[160px] relative opacity-40;
 
@@ -12,13 +13,21 @@ main {
 				@apply w-full h-full object-cover;
 			}
 		}
+	}
 
-		.dp {
-			@apply mx-auto rounded-full -mt-16 w-32 h-32 overflow-hidden relative z-10;
+	.dp {
+		@apply mx-auto rounded-full -mt-16 w-32 h-32 overflow-hidden relative z-10;
 
-			img {
-				@apply w-full h-full object-cover;
-			}
+		img {
+			@apply w-full h-full object-cover;
 		}
+	}
+
+	.user-name {
+		@apply text-center text-white font-semibold text-lg mt-6;
+	}
+
+	.body {
+		@apply max-w-md mx-auto mt-10;
 	}
 }

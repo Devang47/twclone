@@ -5,12 +5,11 @@
 	import BlobGreen from '$lib/icons/BlobGreen.svelte';
 	import auth from '$utils/authService';
 	import { isAuthenticated, user } from '$store/auth';
-	import Loader from '$lib/components/Loader.svelte';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import type { Auth0Client } from '@auth0/auth0-spa-js';
-	import { createUser, getUser } from '$utils/api/user';
+	import { getUser } from '$utils/api/user';
 	import { loading } from '$store';
 
 	let auth0Client: Auth0Client;
@@ -37,7 +36,6 @@
 
 	const login = async () => {
 		if (await auth.loginWithPopup(auth0Client, {})) {
-			console.log($user);
 			goto($page.url.searchParams.get('next') || '/');
 		}
 	};

@@ -1,77 +1,108 @@
 <script lang="ts">
-	import LoggedInOnly from '$lib/components/LoggedInOnly.svelte';
-	import Navbar from '$lib/layout/Navbar.svelte';
 	import Heart from '$lib/icons/Heart.svelte';
 	import Retweet from '$lib/icons/Retweet.svelte';
+	import { onMount } from 'svelte';
+	import { loading } from '$store';
+	import { getUser, getUserByUid } from '$utils/api/user';
+	import { page } from '$app/stores';
 
-	import '$styles/_nav.scss';
-	import '$styles/_user.scss';
+	import TweetInput from '$lib/components/TweetInput.svelte';
+	import { isAuthenticated, user } from '$store/auth';
+	import { getTweetsByUser } from '$utils/api/tweets';
+	import auth from '$utils/authService';
+	import { goto } from '$app/navigation';
+	import TweetItem from '$lib/layout/Tweet.svelte';
+	import Navbar from '$lib/layout/Navbar.svelte';
+
+	let userData: User;
+	let error: any = null;
+
+	let limit = 0;
+	let tweets: Tweet[] = [];
+
+	onMount(async () => {
+		if (!$user?.email) {
+			let auth0Client = await auth.createClient();
+			isAuthenticated.set(await auth0Client.isAuthenticated());
+			const data = await auth0Client.getUser();
+
+			if (data?.email) {
+				const userdata = await getUser(data.email);
+				if (!userdata) goto('/login', { replaceState: true });
+				user.set(userdata[0]);
+			}
+
+			if (!$isAuthenticated) {
+				goto(`/login?next=${location.pathname}`);
+			}
+		}
+
+		const uid = $page.params.username;
+		try {
+			userData = (await getUserByUid(uid)) as User;
+			loadMoreTweets();
+		} catch (err: any) {
+			error = err.msg;
+		}
+
+		$loading = false;
+	});
+
+	const loadTweets = async () => {
+		const uid = $page.params.username;
+		tweets = (await getTweetsByUser(limit, uid)).data;
+	};
+
+	const loadMoreTweets = async () => {
+		limit += 15;
+		loadTweets();
+	};
 </script>
 
 <svelte:head>
 	<title>App | TWClone</title>
 </svelte:head>
 
-<LoggedInOnly>
+{#if error}
+	{#if error?.msg === 'not-found'}
+		404 Not Found
+	{:else if error?.msg === 'unknown-error'}
+		Unknown Error
+	{/if}
+{/if}
+
+<Navbar />
+
+<main>
 	<section>
 		<div class="banner">
 			<img src="/images/{Math.floor(Math.random() * 4)}.png" alt="" />
 		</div>
 
 		<div class="dp">
-			<img
-				src="https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1180&q=80"
-				alt=""
-			/>
+			<img src={userData?.photo} alt={'photo of ' + userData?.username} />
 		</div>
 
-		<div class="tweets-wrapper">
-			<div class="input">
-				<div class="textarea">
-					<textarea
-						name=""
-						id=""
-						cols="30"
-						rows="10"
-						maxlength="200"
-						class="no-scrollbar"
-						placeholder="Write Something..."
-					/>
-					<div class="cshadow" />
-					<button> Tweet </button>
+		<div class="user-name">
+			{userData?.username}
+		</div>
+
+		<div class="body">
+			<div class="tweets-wrapper">
+				<div class="input">
+					<TweetInput on:tweet-created={loadTweets} />
 				</div>
-			</div>
 
-			<div class="" />
+				<div class="" />
 
-			<div class="tweets">
-				{#each new Array(10) as _}
-					<div class="tweet">
-						<h2 class="author">Devang Saklani</h2>
-
-						<p>
-							Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sit earum non quas suscipit!
-							Architecto, neque, provident ut non alias eos vitae quam impedit, quaerat molestias
-							laudantium sint voluptas minima nobis!
-						</p>
-
-						<div class="action-btns">
-							<button>
-								<Heart />
-							</button>
-							<button>
-								<Retweet />
-							</button>
-						</div>
-
-						<div class="options">
-							{#each new Array(3) as _}
-								<span />
-							{/each}
-						</div>
-					</div>
-				{/each}
+				<div class="tweets">
+					{#if tweets}
+						{#each tweets as item (item.id)}
+							<TweetItem data={item} />
+						{/each}
+					{/if}
+				</div>
 			</div>
 		</div>
 	</section>
-</LoggedInOnly>
+</main>

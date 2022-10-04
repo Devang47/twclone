@@ -44,3 +44,16 @@ export const getUser = async (email: string) => {
 		console.error(err);
 	}
 };
+
+export const getUserByUid = async (uid: string) =>
+	new Promise(async (resolve, reject): Promise<any> => {
+		try {
+			const userData = await axios.get(apiAddr + `/user/${uid}`);
+			resolve(userData.data[0] as User);
+		} catch (error: any) {
+			if (error.response.status === 404) {
+				reject({ msg: 'not-found' });
+			}
+			reject({ msg: 'unknown-error' });
+		}
+	});

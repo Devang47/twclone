@@ -20,7 +20,9 @@ func SetupRoutes() *mux.Router {
 
 	r.HandleFunc("/api/user/{id}", HandleGetUser).Methods(http.MethodGet, http.MethodOptions)
 
-	r.HandleFunc("/api/get-tweets", HandleGetTweets).Methods(http.MethodGet, http.MethodPost, http.MethodOptions)
+	r.HandleFunc("/api/get-tweets", HandleGetTweets).Methods(http.MethodGet, http.MethodOptions)
+
+	r.HandleFunc("/api/get-tweets/{id}", HandleGetTweetsOfUser).Methods(http.MethodGet, http.MethodOptions)
 
 	r.HandleFunc("/api/post-tweet", HandlePostTweet).Methods(http.MethodPost, http.MethodOptions)
 

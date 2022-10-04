@@ -3,10 +3,21 @@ import axios from 'axios';
 import { get } from 'svelte/store';
 import { apiAddr } from './base';
 
-export const getTweets = async (token: string) => {
-	const res = await axios.get(apiAddr + '/get-tweets?limit=15', {
+export const getTweets = async (token: string, limit: number = 15) => {
+	const res = await axios.get(apiAddr + `/get-tweets?limit=${limit}`, {
 		headers: {
 			Authorization: token
+		}
+	});
+	return res;
+};
+
+export const getTweetsByUser = async (limit: number = 15, UID: string = '12341324234') => {
+	let authKey = get(user)?.uid as string;
+
+	const res = await axios.get(apiAddr + `/get-tweets/${UID}?limit=${limit}`, {
+		headers: {
+			Authorization: authKey
 		}
 	});
 	return res;

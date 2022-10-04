@@ -1,10 +1,10 @@
 <script lang="ts">
 	import ProgressBar from '$lib/components/ProgressBar.svelte';
 	import { onMount } from 'svelte';
-
-	import '$styles/global.scss';
 	import Loader from '$lib/components/Loader.svelte';
 	import { loading } from '$store';
+
+	import '$styles/global.scss';
 
 	onMount(() => {
 		addObserver();

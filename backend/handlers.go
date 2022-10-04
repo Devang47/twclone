@@ -27,11 +27,20 @@ func HandleGetUser(w http.ResponseWriter, r *http.Request) {
 
 func HandleGetTweets(w http.ResponseWriter, r *http.Request) {
 	database := Client.Database("twclone").Collection("users")
-	limit := r.FormValue("limit")
 
 	authM.AuthMiddleware(w, r, database, func() {
 		database = Client.Database("twclone").Collection("tweets")
-		db.GetAllTweets(w, r, database, limit)
+		db.GetAllTweets(w, r, database)
+	})
+
+}
+
+func HandleGetTweetsOfUser(w http.ResponseWriter, r *http.Request) {
+	database := Client.Database("twclone").Collection("users")
+
+	authM.AuthMiddleware(w, r, database, func() {
+		database = Client.Database("twclone").Collection("tweets")
+		db.GetAllTweetsByUser(w, r, database)
 	})
 
 }
