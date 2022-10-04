@@ -16,8 +16,8 @@ func CreateUser(w http.ResponseWriter, r *http.Request, db *mongo.Collection) {
 	var user models.User
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
 		jsonRes, _ := json.Marshal(Response{Msg: "Invalid json"})
-		w.Write(jsonRes)
 		w.WriteHeader(http.StatusNotAcceptable)
+		w.Write(jsonRes)
 		return
 	}
 
@@ -32,21 +32,21 @@ func CreateUser(w http.ResponseWriter, r *http.Request, db *mongo.Collection) {
 		res, err := db.InsertOne(context.TODO(), user)
 		if err != nil {
 			jsonRes, _ := json.Marshal(Response{Msg: "Failed to add tweet to db!"})
-			w.Write(jsonRes)
 			w.WriteHeader(http.StatusExpectationFailed)
+			w.Write(jsonRes)
 			return
 		}
 
 		results := GetFromDB(db, "_id", res.InsertedID)
 
 		userData, _ := json.Marshal(results[0])
-		w.Write(userData)
 		w.WriteHeader(http.StatusCreated)
+		w.Write(userData)
 	} else {
 		// User Exists
 		res, _ := json.Marshal(results[0])
-		w.Write(res)
 		w.WriteHeader(http.StatusAccepted)
+		w.Write(res)
 	}
 }
 
@@ -60,8 +60,8 @@ func GetUser(w http.ResponseWriter, r *http.Request, db *mongo.Collection) {
 		w.Write(jsonRes)
 	} else {
 		jsonUser, _ := json.Marshal(user)
-		w.Write(jsonUser)
 		w.WriteHeader(http.StatusOK)
+		w.Write(jsonUser)
 	}
 }
 
@@ -75,7 +75,7 @@ func GetUuid(w http.ResponseWriter, r *http.Request, db *mongo.Collection) {
 		w.Write(jsonRes)
 	} else {
 		jsonUser, _ := json.Marshal(user)
-		w.Write(jsonUser)
 		w.WriteHeader(http.StatusOK)
+		w.Write(jsonUser)
 	}
 }

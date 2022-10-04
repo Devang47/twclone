@@ -23,8 +23,8 @@ func AddTweet(w http.ResponseWriter, r *http.Request, db *mongo.Collection) {
 	var tweet models.Tweet
 	if err := json.NewDecoder(r.Body).Decode(&tweet); err != nil {
 		jsonRes, _ := json.Marshal(Response{Msg: "Invalid json"})
-		w.Write(jsonRes)
 		w.WriteHeader(http.StatusNotAcceptable)
+		w.Write(jsonRes)
 		return
 	}
 
@@ -35,14 +35,14 @@ func AddTweet(w http.ResponseWriter, r *http.Request, db *mongo.Collection) {
 	_, err := db.InsertOne(context.TODO(), tweet)
 	if err != nil {
 		jsonRes, _ := json.Marshal(Response{Msg: "Failed to add tweet to db!"})
-		w.Write(jsonRes)
 		w.WriteHeader(http.StatusExpectationFailed)
+		w.Write(jsonRes)
 		return
 	}
 
 	jsonRes, _ := json.Marshal(Response{Msg: "Done"})
-	w.Write(jsonRes)
 	w.WriteHeader(http.StatusOK)
+	w.Write(jsonRes)
 
 }
 
@@ -69,25 +69,19 @@ func GetAllTweets(w http.ResponseWriter, r *http.Request, db *mongo.Collection) 
 	jsonTweets, err := json.Marshal(results)
 	if err != nil {
 		jsonRes, _ := json.Marshal(Response{Msg: "Invalid json!"})
-		w.Write(jsonRes)
 		w.WriteHeader(http.StatusNotAcceptable)
+		w.Write(jsonRes)
 		return
 	}
 
-	w.Write(jsonTweets)
 	w.WriteHeader(http.StatusOK)
+	w.Write(jsonTweets)
 }
 
 func GetAllTweetsByUser(w http.ResponseWriter, r *http.Request, db *mongo.Collection) {
 	vars := mux.Vars(r)["id"]
-	limit := r.FormValue("limit")
 
-	i, err := strconv.Atoi(limit)
-	if err != nil {
-		panic(err)
-	}
-
-	opts := options.Find().SetSort(bson.D{{Key: "published_on", Value: -1}}).SetLimit(int64(i))
+	opts := options.Find().SetSort(bson.D{{Key: "published_on", Value: -1}})
 
 	cursor, err := db.Find(context.TODO(), bson.D{primitive.E{Key: "author_uid", Value: vars}}, opts)
 	if err != nil {
@@ -102,13 +96,13 @@ func GetAllTweetsByUser(w http.ResponseWriter, r *http.Request, db *mongo.Collec
 	jsonTweets, err := json.Marshal(results)
 	if err != nil {
 		jsonRes, _ := json.Marshal(Response{Msg: "Invalid json!"})
-		w.Write(jsonRes)
 		w.WriteHeader(http.StatusNotAcceptable)
+		w.Write(jsonRes)
 		return
 	}
 
-	w.Write(jsonTweets)
 	w.WriteHeader(http.StatusOK)
+	w.Write(jsonTweets)
 }
 
 func LikeTweet(w http.ResponseWriter, r *http.Request, usersDatabase *mongo.Collection, tweetsDatabase *mongo.Collection) {
@@ -134,8 +128,8 @@ func LikeTweet(w http.ResponseWriter, r *http.Request, usersDatabase *mongo.Coll
 			})
 
 			jsonRes, _ := json.Marshal(Response{Msg: "Done"})
-			w.Write(jsonRes)
 			w.WriteHeader(http.StatusOK)
+			w.Write(jsonRes)
 			return
 		}
 	}
@@ -154,11 +148,43 @@ func LikeTweet(w http.ResponseWriter, r *http.Request, usersDatabase *mongo.Coll
 	})
 
 	jsonRes, _ := json.Marshal(Response{Msg: "Done"})
-	w.Write(jsonRes)
 	w.WriteHeader(http.StatusOK)
-	return
+	w.Write(jsonRes)
 }
 
 func remove(slice []string, s int) []string {
 	return append(slice[:s], slice[s+1:]...)
+}
+
+func DeleteTweet(w http.ResponseWriter, r *http.Request, db *mongo.Collection) {
+
+	var tweet models.Tweet
+	if err := json.NewDecoder(r.Body).Decode(&tweet); err != nil {
+		jsonRes, _ := json.Marshal(Response{Msg: "Invalid json"})
+		w.WriteHeader(http.StatusNotAcceptable)
+		w.Write(jsonRes)
+		return
+	}
+
+	UID := r.Header.Get("Authorization")
+	if tweet.AuthorUid != UID {
+		jsonRes, _ := json.Marshal(Response{Msg: "Authorization failed!"})
+		w.WriteHeader(http.StatusUnauthorized)
+		w.Write(jsonRes)
+		return
+
+	}
+
+	_, err := db.DeleteOne(context.TODO(), bson.D{primitive.E{Key: "id", Value: tweet.Id}})
+	if err != nil {
+		jsonRes, _ := json.Marshal(Response{Msg: "Failed to add tweet to db!"})
+		w.WriteHeader(http.StatusExpectationFailed)
+		w.Write(jsonRes)
+		return
+	}
+
+	jsonRes, _ := json.Marshal(Response{Msg: "Done"})
+	w.WriteHeader(http.StatusOK)
+	w.Write(jsonRes)
+
 }

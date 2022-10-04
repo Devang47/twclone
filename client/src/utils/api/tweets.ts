@@ -12,10 +12,10 @@ export const getTweets = async (token: string, limit: number = 15) => {
 	return res;
 };
 
-export const getTweetsByUser = async (limit: number = 15, UID: string = '12341324234') => {
+export const getTweetsByUser = async (UID: string = '12341324234') => {
 	let authKey = get(user)?.uid as string;
 
-	const res = await axios.get(apiAddr + `/get-tweets/${UID}?limit=${limit}`, {
+	const res = await axios.get(apiAddr + `/get-tweets/${UID}`, {
 		headers: {
 			Authorization: authKey
 		}
@@ -26,6 +26,21 @@ export const getTweetsByUser = async (limit: number = 15, UID: string = '1234132
 export const postTweets = async (token: string, tweet: Tweet) => {
 	const res = await axios.post(
 		apiAddr + '/post-tweet',
+		{
+			...tweet
+		},
+		{
+			headers: {
+				Authorization: token
+			}
+		}
+	);
+	return res;
+};
+
+export const deleteTweet = async (token: string, tweet: Tweet) => {
+	const res = await axios.post(
+		apiAddr + '/delete-tweet',
 		{
 			...tweet
 		},

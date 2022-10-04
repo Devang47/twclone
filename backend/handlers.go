@@ -60,3 +60,11 @@ func HandleLikeTweet(w http.ResponseWriter, r *http.Request) {
 		db.LikeTweet(w, r, usersdatabase, tweetsDatabase)
 	})
 }
+
+func HandleDeleteTweet(w http.ResponseWriter, r *http.Request) {
+	usersdatabase := Client.Database("twclone").Collection("users")
+	authM.AuthMiddleware(w, r, usersdatabase, func() {
+		tweetsDatabase := Client.Database("twclone").Collection("tweets")
+		db.DeleteTweet(w, r, tweetsDatabase)
+	})
+}

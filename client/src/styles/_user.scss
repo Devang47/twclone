@@ -3,15 +3,13 @@ body {
 	overflow: scroll;
 }
 
-main {
-	section {
-		@apply mt-[60px];
-		.banner {
-			@apply w-full h-[160px] relative opacity-40;
+#user-data {
+	@apply mt-[60px] pb-20;
+	.banner {
+		@apply w-full h-[160px] relative opacity-40;
 
-			img {
-				@apply w-full h-full object-cover;
-			}
+		img {
+			@apply w-full h-full object-cover;
 		}
 	}
 
@@ -28,6 +26,6 @@ main {
 	}
 
 	.body {
-		@apply max-w-md mx-auto mt-10;
+		@apply max-w-lg md:max-w-xl mx-auto mt-10;
 	}
 }

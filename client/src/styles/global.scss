@@ -98,14 +98,11 @@ body {
 		}
 
 		.action-btns {
-			@apply mt-4 flex items-center gap-3;
+			@apply mt-4 -ml-2;
 
 			button {
 				@apply p-2 h-[35px] w-[35px]
 					flex items-center justify-center justify-items-center rounded-full  hover:bg-[#ffffff0f] active:bg-[#ffffff21] duration-100;
-
-				svg path {
-				}
 			}
 
 			.likedByUser {
@@ -114,14 +111,8 @@ body {
 				}
 			}
 
-			button:first-of-type {
-				svg {
-					stroke: #d7d7d7;
-					@apply w-[20px];
-				}
-			}
-
 			svg {
+				stroke: #d7d7d7;
 				@apply w-[20px];
 			}
 		}
@@ -130,6 +121,21 @@ body {
 			@apply flex items-center justify-center gap-[3px] flex-col w-8 absolute top-5 right-4 h-8 hover:bg-[#ffffff0f] active:bg-[#ffffff21] duration-100 rounded-full cursor-pointer;
 			span {
 				@apply bg-[#D7D7D7] h-[3px] w-[3px] rounded-full;
+			}
+		}
+
+		.options-menu {
+			@apply absolute top-[110%] left-1/2 -translate-x-1/2 py-1 rounded bg-[#414145] text-white;
+
+			filter: drop-shadow(0px 18px 36px rgba(0, 0, 0, 0.07))
+				drop-shadow(0px 7.51997px 15.0399px rgba(0, 0, 0, 0.0503198))
+				drop-shadow(0px 4.02054px 8.04107px rgba(0, 0, 0, 0.0417275))
+				drop-shadow(0px 2.25388px 4.50776px rgba(0, 0, 0, 0.035))
+				drop-shadow(0px 1.19702px 2.39404px rgba(0, 0, 0, 0.0282725))
+				drop-shadow(0px 0.498106px 0.996212px rgba(0, 0, 0, 0.0196802));
+
+			button {
+				@apply py-1 px-4 text-sm;
 			}
 		}
 	}

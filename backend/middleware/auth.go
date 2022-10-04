@@ -16,7 +16,6 @@ func AuthMiddleware(w http.ResponseWriter, r *http.Request, dbI *mongo.Collectio
 		w.WriteHeader(http.StatusForbidden)
 		w.Write(jsonRes)
 		panic("Authorization header not found")
-
 	}
 
 	user := db.GetFromDB(dbI, "uid", UID)

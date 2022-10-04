@@ -28,5 +28,7 @@ func SetupRoutes() *mux.Router {
 
 	r.HandleFunc("/api/like-tweet", HandleLikeTweet).Methods(http.MethodGet, http.MethodOptions)
 
+	r.HandleFunc("/api/delete-tweet", HandleDeleteTweet).Methods(http.MethodPost, http.MethodOptions)
+
 	return r
 }

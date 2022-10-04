@@ -1,16 +1,20 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { scale } from 'svelte/transition';
+	import { scale, slide } from 'svelte/transition';
+	import { clickOutside } from '$utils/clickOutside';
 
 	import Heart from '$lib/icons/Heart.svelte';
 	import Retweet from '$lib/icons/Retweet.svelte';
 	import { handleLikeTweet } from '$utils/tweet';
 	import { user } from '$store/auth';
-	import { onMount } from 'svelte';
+	import { createEventDispatcher, onMount } from 'svelte';
 	import { loading, tweetsData } from '$store';
+	import { deleteTweet } from '$utils/api/tweets';
 
 	export let data: Tweet;
 
+	let eventDispatcher = createEventDispatcher();
+	let optionsMenuOpen = false;
 	let likedByUser: boolean;
 	onMount(() => {
 		likedByUser = Boolean(data.likes.liked_by.find((e) => e === $user?.username));
@@ -23,20 +27,19 @@
 		likedByUser = !likedByUser;
 		$loading = false;
 	};
+
+	const handleDeleteTweet = async () => {
+		let authKey = $user?.uid as string;
+		try {
+			const res = await deleteTweet(authKey, data);
+			eventDispatcher('tweet-deleted');
+		} catch (error) {
+			console.log(error);
+		}
+	};
 </script>
 
-<!-- {
-    "_id": "630f6d8d7274a9291225d764",
-    "author": "devang",
-    "likes": {
-        "likedby": null,
-        "totallikes": 0
-    },
-    "publishedon": "2022-08-31 19:47:49.408663 +0530 IST m=+1.676021168",
-    "tweet": "deva2314sdfsjhgsdfd2ng@ag.com"
-} -->
-
-<div class="tweet w-full" transition:scale={{ start: 0.9, opacity: 0.8 }}>
+<div class="tweet w-full" in:scale={{ start: 0.9, opacity: 0.8 }} out:slide={{ duration: 300 }}>
 	<div class="tweet-header">
 		<h2
 			class="author w-fit"
@@ -65,14 +68,26 @@
 		<button class={likedByUser ? 'likedByUser' : ''} on:click={likeTweet}>
 			<Heart />
 		</button>
-		<button>
-			<Retweet />
-		</button>
 	</div>
 
-	<div class="options">
-		{#each new Array(3) as _}
-			<span />
-		{/each}
-	</div>
+	{#if data.author_uid !== $user?.uid}
+		<button class="options" on:click|stopPropagation={() => (optionsMenuOpen = !optionsMenuOpen)}>
+			{#each new Array(3) as _}
+				<span />
+			{/each}
+
+			{#if optionsMenuOpen}
+				<div
+					use:clickOutside
+					on:click_outside={() => {
+						optionsMenuOpen = !optionsMenuOpen;
+					}}
+					class="options-menu"
+					transition:slide={{ duration: 200 }}
+				>
+					<button on:click|self={handleDeleteTweet}>Delete</button>
+				</div>
+			{/if}
+		</button>
+	{/if}
 </div>

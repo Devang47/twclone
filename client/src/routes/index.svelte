@@ -17,10 +17,14 @@
 	const loadMoreTweets = async () => {
 		$loading = true;
 		limit += 15;
+		await reloadTweets();
+		$loading = false;
+	};
+
+	const reloadTweets = async () => {
 		let authKey = $user?.uid as string;
 		const res = await getTweets(authKey, limit);
 		$tweetsData = res.data;
-		$loading = false;
 	};
 </script>
 
@@ -38,7 +42,7 @@
 		<div class="tweets">
 			{#if $tweetsData?.length}
 				{#each $tweetsData as item (item.id)}
-					<Tweet data={item} />
+					<Tweet on:tweet-deleted={reloadTweets} data={item} />
 				{/each}
 			{/if}
 		</div>

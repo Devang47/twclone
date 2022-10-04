@@ -17,7 +17,6 @@
 	let userData: User;
 	let error: any = null;
 
-	let limit = 0;
 	let tweets: Tweet[] = [];
 
 	onMount(async () => {
@@ -40,7 +39,7 @@
 		const uid = $page.params.username;
 		try {
 			userData = (await getUserByUid(uid)) as User;
-			loadMoreTweets();
+			loadTweets();
 		} catch (err: any) {
 			error = err.msg;
 		}
@@ -50,12 +49,7 @@
 
 	const loadTweets = async () => {
 		const uid = $page.params.username;
-		tweets = (await getTweetsByUser(limit, uid)).data;
-	};
-
-	const loadMoreTweets = async () => {
-		limit += 15;
-		loadTweets();
+		tweets = (await getTweetsByUser(uid)).data;
 	};
 </script>
 
@@ -74,7 +68,7 @@
 <Navbar />
 
 <main>
-	<section>
+	<section id="user-data">
 		<div class="banner">
 			<img src="/images/{Math.floor(Math.random() * 4)}.png" alt="" />
 		</div>
@@ -98,7 +92,7 @@
 				<div class="tweets">
 					{#if tweets}
 						{#each tweets as item (item.id)}
-							<TweetItem data={item} />
+							<TweetItem on:tweet-deleted={loadTweets} data={item} />
 						{/each}
 					{/if}
 				</div>
