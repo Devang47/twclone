@@ -46,46 +46,34 @@ func AddTweet(w http.ResponseWriter, r *http.Request, db *mongo.Collection) {
 
 }
 
-func GetAllTweets(w http.ResponseWriter, r *http.Request, db *mongo.Collection) {
-	limit := r.FormValue("limit")
+func GetAllTweets(w http.ResponseWriter, r *http.Request, db *mongo.Collection, method string) {
 
-	i, err := strconv.Atoi(limit)
-	if err != nil {
-		panic(err)
-	}
+	var cursor *mongo.Cursor
+	var err error
+	if method == "all" {
+		limit := r.FormValue("limit")
 
-	opts := options.Find().SetSort(bson.D{{Key: "published_on", Value: -1}}).SetLimit(int64(i))
+		i, err := strconv.Atoi(limit)
+		if err != nil {
+			panic(err)
+		}
 
-	cursor, err := db.Find(context.TODO(), bson.D{primitive.E{}}, opts)
-	if err != nil {
-		log.Fatal(err)
-	}
+		opts := options.Find().SetSort(bson.D{{Key: "published_on", Value: -1}}).SetLimit(int64(i))
 
-	var results []bson.M
-	if err = cursor.All(context.TODO(), &results); err != nil {
-		log.Fatal(err)
-	}
+		cursor, err = db.Find(context.TODO(), bson.D{primitive.E{}}, opts)
+		if err != nil {
+			log.Fatal(err)
+		}
 
-	jsonTweets, err := json.Marshal(results)
-	if err != nil {
-		jsonRes, _ := json.Marshal(Response{Msg: "Invalid json!"})
-		w.WriteHeader(http.StatusNotAcceptable)
-		w.Write(jsonRes)
-		return
-	}
+	} else if method == "user" {
+		vars := mux.Vars(r)["id"]
 
-	w.WriteHeader(http.StatusOK)
-	w.Write(jsonTweets)
-}
+		opts := options.Find().SetSort(bson.D{{Key: "published_on", Value: -1}})
 
-func GetAllTweetsByUser(w http.ResponseWriter, r *http.Request, db *mongo.Collection) {
-	vars := mux.Vars(r)["id"]
-
-	opts := options.Find().SetSort(bson.D{{Key: "published_on", Value: -1}})
-
-	cursor, err := db.Find(context.TODO(), bson.D{primitive.E{Key: "author_uid", Value: vars}}, opts)
-	if err != nil {
-		log.Fatal(err)
+		cursor, err = db.Find(context.TODO(), bson.D{primitive.E{Key: "author_uid", Value: vars}}, opts)
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 
 	var results []bson.M

@@ -74,7 +74,11 @@
 		</div>
 
 		<div class="dp">
-			<img src={userData?.photo} alt={'photo of ' + userData?.username} />
+			<img
+				src={userData?.photo}
+				alt={'photo of ' + userData?.username}
+				referrerpolicy="no-referrer"
+			/>
 		</div>
 
 		<div class="user-name">

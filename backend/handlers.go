@@ -30,7 +30,7 @@ func HandleGetTweets(w http.ResponseWriter, r *http.Request) {
 
 	authM.AuthMiddleware(w, r, database, func() {
 		database = Client.Database("twclone").Collection("tweets")
-		db.GetAllTweets(w, r, database)
+		db.GetAllTweets(w, r, database, "all")
 	})
 
 }
@@ -40,7 +40,9 @@ func HandleGetTweetsOfUser(w http.ResponseWriter, r *http.Request) {
 
 	authM.AuthMiddleware(w, r, database, func() {
 		database = Client.Database("twclone").Collection("tweets")
-		db.GetAllTweetsByUser(w, r, database)
+		// db.GetAllTweetsByUser(w, r, database)
+		db.GetAllTweets(w, r, database, "user")
+
 	})
 
 }

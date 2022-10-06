@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { scale, slide } from 'svelte/transition';
+	import { fade, scale, slide } from 'svelte/transition';
 	import { clickOutside } from '$utils/clickOutside';
 
 	import Heart from '$lib/icons/Heart.svelte';
@@ -39,11 +39,12 @@
 	};
 </script>
 
-<div class="tweet w-full" in:scale={{ start: 0.9, opacity: 0.8 }} out:slide={{ duration: 300 }}>
+<div class="tweet w-full" in:scale={{ start: 0.9, opacity: 0.8 }} out:fade={{ duration: 300 }}>
 	<div class="tweet-header">
 		<h2
 			class="author w-fit"
 			on:click={() => {
+				if (window.location.pathname === '/user/' + data.author_uid) return;
 				tweetsData.set([]);
 				loading.set(true);
 				goto('/user/' + data.author_uid, { replaceState: true });
