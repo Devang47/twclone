@@ -30,5 +30,7 @@ func SetupRoutes() *mux.Router {
 
 	r.HandleFunc("/api/delete-tweet", HandleDeleteTweet).Methods(http.MethodPost, http.MethodOptions)
 
+	r.HandleFunc("/ws", WsHandler).Methods(http.MethodPost, http.MethodGet, http.MethodOptions)
+
 	return r
 }

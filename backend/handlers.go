@@ -1,9 +1,12 @@
 package main
 
 import (
+	"log"
 	db "main/controllers"
 	authM "main/middleware"
 	"net/http"
+
+	"github.com/gorilla/websocket"
 )
 
 func HandleGetUUID(w http.ResponseWriter, r *http.Request) {
@@ -69,4 +72,40 @@ func HandleDeleteTweet(w http.ResponseWriter, r *http.Request) {
 		tweetsDatabase := Client.Database("twclone").Collection("tweets")
 		db.DeleteTweet(w, r, tweetsDatabase)
 	})
+}
+
+var upgrader = websocket.Upgrader{
+	ReadBufferSize:  1024,
+	WriteBufferSize: 1024,
+}
+
+func WsHandler(w http.ResponseWriter, r *http.Request) {
+	upgrader.CheckOrigin = func(r *http.Request) bool { return true }
+
+	ws, err := upgrader.Upgrade(w, r, nil)
+	if err != nil {
+		panic(err)
+
+	}
+
+	err = ws.WriteMessage(1, []byte("Hello from twclone!"))
+	if err != nil {
+		panic(err)
+	}
+
+	reader(ws)
+}
+
+func reader(conn *websocket.Conn) {
+	for {
+		_, p, err := conn.ReadMessage()
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		if string(p) == "tweets-updated" {
+			conn.WriteMessage(1, []byte("refresh"))
+		}
+	}
 }
