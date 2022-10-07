@@ -3,6 +3,7 @@ This project is clone of twitter, which was created by to practice my golang, mo
 
 ## Tools used: 
 - Sveltekit & Tailwind
+- Websocket
 - Mongodb
 - Golang (mux)
 - Bash

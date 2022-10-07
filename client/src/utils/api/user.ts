@@ -15,7 +15,7 @@ export const createUser = async (data: AuthUser) => {
 	};
 
 	try {
-		await fetch('http://' + apiAddr + '/create-user', {
+		await fetch('https://' + apiAddr + '/create-user', {
 			method: 'POST',
 			mode: 'no-cors',
 			credentials: 'same-origin', // include, *same-origin, omit
@@ -37,7 +37,7 @@ export const createUser = async (data: AuthUser) => {
 
 export const getUser = async (email: string) => {
 	try {
-		const res = await axios.get('http://' + apiAddr + `/get-uuid/${email}`);
+		const res = await axios.get('https://' + apiAddr + `/get-uuid/${email}`);
 
 		return res.data;
 	} catch (err) {
@@ -48,7 +48,7 @@ export const getUser = async (email: string) => {
 export const getUserByUid = async (uid: string) =>
 	new Promise(async (resolve, reject): Promise<any> => {
 		try {
-			const userData = await axios.get('http://' + apiAddr + `/user/${uid}`);
+			const userData = await axios.get('https://' + apiAddr + `/user/${uid}`);
 			resolve(userData.data[0] as User);
 		} catch (error: any) {
 			if (error.response.status === 404) {
