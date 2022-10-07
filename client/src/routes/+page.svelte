@@ -8,12 +8,11 @@
 	import { onMount } from 'svelte';
 	import { getTweets } from '$utils/api/tweets';
 	import { user } from '$store/auth';
-	import { apiAddr } from '$utils/api/base';
 
 	onMount(() => {
 		$loading = false;
 
-		$socket = new WebSocket(`ws://${apiAddr}/ws`);
+		$socket = new WebSocket(`ws://twclone.awsapp.xyz/api/ws`);
 
 		$socket.onerror = (error) => {
 			console.log('Socket Error: ', error);

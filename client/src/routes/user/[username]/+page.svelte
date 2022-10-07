@@ -49,7 +49,7 @@
 			error = err.msg;
 		}
 
-		$socket = new WebSocket(`ws://${apiAddr}/ws`);
+		$socket = new WebSocket(`ws://twclone.awsapp.xyz/api/ws`);
 
 		$socket.onerror = (error) => {
 			console.log('Socket Error: ', error);

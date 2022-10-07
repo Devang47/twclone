@@ -5,7 +5,7 @@ import { get } from 'svelte/store';
 import { apiAddr } from './base';
 
 export const getTweets = async (token: string, limit: number = 15) => {
-	const res = await axios.get('https://' + apiAddr + `/get-tweets?limit=${limit}`, {
+	const res = await axios.get(apiAddr + `/get-tweets?limit=${limit}`, {
 		headers: {
 			Authorization: token
 		}
@@ -16,7 +16,7 @@ export const getTweets = async (token: string, limit: number = 15) => {
 export const getTweetsByUser = async (UID: string = '12341324234') => {
 	let authKey = get(user)?.uid as string;
 
-	const res = await axios.get('https://' + apiAddr + `/get-tweets/${UID}`, {
+	const res = await axios.get(apiAddr + `/get-tweets/${UID}`, {
 		headers: {
 			Authorization: authKey
 		}
@@ -26,7 +26,7 @@ export const getTweetsByUser = async (UID: string = '12341324234') => {
 
 export const postTweets = async (token: string, tweet: Tweet) => {
 	const res = await axios.post(
-		'https://' + apiAddr + '/post-tweet',
+		apiAddr + '/post-tweet',
 		{
 			...tweet
 		},
@@ -42,7 +42,7 @@ export const postTweets = async (token: string, tweet: Tweet) => {
 
 export const deleteTweet = async (token: string, tweet: Tweet) => {
 	const res = await axios.post(
-		'https://' + apiAddr + '/delete-tweet',
+		apiAddr + '/delete-tweet',
 		{
 			...tweet
 		},
@@ -58,7 +58,7 @@ export const deleteTweet = async (token: string, tweet: Tweet) => {
 };
 
 export const likeTweet = async (token: string, id: string) => {
-	const res = await axios.get('https://' + apiAddr + '/like-tweet', {
+	const res = await axios.get(apiAddr + '/like-tweet', {
 		params: {
 			id
 		},
