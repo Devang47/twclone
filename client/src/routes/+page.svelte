@@ -12,7 +12,7 @@
 	onMount(() => {
 		$loading = false;
 
-		$socket = new WebSocket(`ws://twclone.awsapp.xyz/api/ws`);
+		$socket = new WebSocket(`wss://twclone.awsapp.xyz/api/ws`);
 
 		$socket.onerror = (error) => {
 			console.log('Socket Error: ', error);
