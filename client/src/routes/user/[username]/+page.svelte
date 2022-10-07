@@ -2,7 +2,7 @@
 	import Heart from '$lib/icons/Heart.svelte';
 	import Retweet from '$lib/icons/Retweet.svelte';
 	import { onMount } from 'svelte';
-	import { loading } from '$store';
+	import { loading, socket } from '$store';
 	import { getUser, getUserByUid } from '$utils/api/user';
 	import { page } from '$app/stores';
 
@@ -13,6 +13,7 @@
 	import { goto } from '$app/navigation';
 	import TweetItem from '$lib/layout/Tweet.svelte';
 	import Navbar from '$lib/layout/Navbar.svelte';
+	import { apiAddr } from '$utils/api/base';
 
 	let userData: User;
 	let error: any = null;
@@ -43,6 +44,18 @@
 		} catch (err: any) {
 			error = err.msg;
 		}
+
+		$socket = new WebSocket(`ws://${apiAddr}/ws`);
+
+		$socket.onerror = (error) => {
+			console.log('Socket Error: ', error);
+		};
+
+		$socket.onmessage = (msg) => {
+			if (msg.data === 'user-tweets-updated') {
+				loadTweets();
+			}
+		};
 
 		$loading = false;
 	});

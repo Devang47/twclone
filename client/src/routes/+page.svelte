@@ -4,13 +4,26 @@
 	import ArrowBottom from '$lib/icons/ArrowBottom.svelte';
 	import TweetsBg from '$lib/layout/TweetsBG.svelte';
 	import TweetInput from '$lib/components/TweetInput.svelte';
-	import { loading, tweetsData } from '$store';
+	import { loading, socket, tweetsData } from '$store';
 	import { onMount } from 'svelte';
 	import { getTweets } from '$utils/api/tweets';
 	import { user } from '$store/auth';
+	import { apiAddr } from '$utils/api/base';
 
 	onMount(() => {
 		$loading = false;
+
+		$socket = new WebSocket(`ws://${apiAddr}/ws`);
+
+		$socket.onerror = (error) => {
+			console.log('Socket Error: ', error);
+		};
+
+		$socket.onmessage = (msg) => {
+			if (msg.data === 'tweets-updated') {
+				reloadTweets();
+			}
+		};
 	});
 
 	let limit = 15;

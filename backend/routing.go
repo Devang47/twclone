@@ -30,7 +30,11 @@ func SetupRoutes() *mux.Router {
 
 	r.HandleFunc("/api/delete-tweet", HandleDeleteTweet).Methods(http.MethodPost, http.MethodOptions)
 
-	r.HandleFunc("/ws", WsHandler).Methods(http.MethodPost, http.MethodGet, http.MethodOptions)
+	hub := newHub()
+	go hub.run()
+	r.HandleFunc("/api/ws", func(w http.ResponseWriter, r *http.Request) {
+		serveWs(hub, w, r)
+	})
 
 	return r
 }
