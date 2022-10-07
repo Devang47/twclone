@@ -20,7 +20,9 @@
 		};
 
 		$socket.onmessage = (msg) => {
-			if (msg.data === 'tweets-updated') {
+			let decodedData = JSON.parse(msg.data);
+
+			if (decodedData.msg === 'tweets-updated') {
 				reloadTweets();
 			}
 		};
@@ -39,6 +41,11 @@
 		const res = await getTweets(authKey, limit);
 		$tweetsData = res.data;
 	};
+
+	const updateTweets = async () => {
+		reloadTweets();
+		$socket.send(JSON.stringify({ msg: 'tweets-updated', user_id: '' }));
+	};
 </script>
 
 <svelte:head>
@@ -49,7 +56,7 @@
 	<TweetsBg />
 	<section id="app">
 		<div class="input">
-			<TweetInput />
+			<TweetInput on:tweet-created={updateTweets} />
 		</div>
 
 		<div class="tweets">

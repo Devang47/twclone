@@ -37,7 +37,6 @@ export const postTweets = async (token: string, tweet: Tweet) => {
 		}
 	);
 
-	get(socket).send('tweets-updated');
 	return res;
 };
 
@@ -54,7 +53,7 @@ export const deleteTweet = async (token: string, tweet: Tweet) => {
 		}
 	);
 
-	get(socket).send('tweets-updated');
+	get(socket).send(JSON.stringify({ msg: 'tweets-updated', user_id: '' }));
 	return res;
 };
 

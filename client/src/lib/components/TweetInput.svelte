@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { createEventDispatcher, onMount } from 'svelte';
 	import { handlePostTweet } from '$utils/tweet';
+	import { socket } from '$store';
 
 	let tweetInput = '';
 	let tweetInputBox: HTMLTextAreaElement;

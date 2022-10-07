@@ -21,8 +21,6 @@ export const handlePostTweet = async (e: string) => {
 			likes: { total_likes: 0, liked_by: [] }
 		});
 
-		const res = await getTweets(authKey);
-		tweetsData.set(res.data);
 		loading.set(false);
 
 		return true;

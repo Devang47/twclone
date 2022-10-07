@@ -1,6 +1,7 @@
 package main
 
 import (
+	socket "main/websocket"
 	"net/http"
 
 	"github.com/go-chi/chi/v5/middleware"
@@ -30,10 +31,10 @@ func SetupRoutes() *mux.Router {
 
 	r.HandleFunc("/api/delete-tweet", HandleDeleteTweet).Methods(http.MethodPost, http.MethodOptions)
 
-	hub := newHub()
-	go hub.run()
+	hub := socket.NewHub()
+	go hub.Run()
 	r.HandleFunc("/api/ws", func(w http.ResponseWriter, r *http.Request) {
-		serveWs(hub, w, r)
+		socket.ServeWs(hub, w, r)
 	})
 
 	return r

@@ -14,11 +14,15 @@
 	import TweetItem from '$lib/layout/Tweet.svelte';
 	import Navbar from '$lib/layout/Navbar.svelte';
 	import { apiAddr } from '$utils/api/base';
+	import { json } from '@sveltejs/kit';
 
 	let userData: User;
 	let error: any = null;
 
 	let tweets: Tweet[] = [];
+
+	let uid = $page.params.username;
+	$: uid = $page.params.username;
 
 	onMount(async () => {
 		if (!$user?.email) {
@@ -52,7 +56,9 @@
 		};
 
 		$socket.onmessage = (msg) => {
-			if (msg.data === 'user-tweets-updated') {
+			let decodedData = JSON.parse(msg.data);
+
+			if (decodedData.msg === 'user-tweets-updated' && decodedData.user_id === uid) {
 				loadTweets();
 			}
 		};
@@ -61,7 +67,6 @@
 	});
 
 	const loadTweets = async () => {
-		const uid = $page.params.username;
 		tweets = (await getTweetsByUser(uid)).data;
 	};
 </script>
@@ -101,7 +106,12 @@
 		<div class="body">
 			<div class="tweets-wrapper">
 				<div class="input">
-					<TweetInput on:tweet-created={loadTweets} />
+					<TweetInput
+						on:tweet-created={() => {
+							$socket.send(JSON.stringify({ msg: 'user-tweets-updated', user_id: uid }));
+							loadTweets();
+						}}
+					/>
 				</div>
 
 				<div class="" />
