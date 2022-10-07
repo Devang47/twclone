@@ -7,7 +7,6 @@ import (
 	"main/models"
 	"net/http"
 	"strconv"
-	"time"
 
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
@@ -28,8 +27,8 @@ func AddTweet(w http.ResponseWriter, r *http.Request, db *mongo.Collection) {
 		return
 	}
 
-	currentTime := time.Now()
-	tweet.PublishedOn = currentTime.Format("2006-01-02 15:04:05.000000")
+	// currentTime := time.Now()
+	// tweet.PublishedOn = currentTime.Format("2006-01-02 15:04:05.000000")
 	tweet.Id = uuid.NewString()
 
 	_, err := db.InsertOne(context.TODO(), tweet)
