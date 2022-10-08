@@ -31,6 +31,7 @@
 	const handleDeleteTweet = async () => {
 		let authKey = $user?.uid as string;
 		try {
+			$tweetsData = $tweetsData?.filter((e) => e.id !== data.id);
 			const res = await deleteTweet(authKey, data);
 			eventDispatcher('tweet-deleted');
 		} catch (error) {

@@ -53,7 +53,6 @@ export const deleteTweet = async (token: string, tweet: Tweet) => {
 		}
 	);
 
-	get(socket).send(JSON.stringify({ msg: 'tweets-updated', user_id: '' }));
 	return res;
 };
 

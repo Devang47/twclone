@@ -61,7 +61,7 @@
 		<div class="tweets">
 			{#if $tweetsData?.length}
 				{#each $tweetsData as item (item.id)}
-					<Tweet on:tweet-deleted={reloadTweets} data={item} />
+					<Tweet on:tweet-deleted={updateTweets} data={item} />
 				{/each}
 			{/if}
 		</div>

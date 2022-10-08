@@ -2,7 +2,7 @@ import { loading, tweetsData } from '$store';
 import { user } from '$store/auth';
 import axios from 'axios';
 import { get } from 'svelte/store';
-import { getTweets, likeTweet, postTweets } from './api/tweets';
+import { likeTweet, postTweets } from './api/tweets';
 
 export const handleLikeTweet = async (id: string, key: string) => {
 	await likeTweet(key, id);
