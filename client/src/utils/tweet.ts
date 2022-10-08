@@ -13,7 +13,7 @@ export const handlePostTweet = async (e: string) => {
 		loading.set(true);
 		let authKey = get(user)?.uid as string;
 
-		const dateData = (await axios.get('http://worldtimeapi.org/api/timezone/Asia/Kolkata')).data;
+		const dateData = (await axios.get('https://worldtimeapi.org/api/timezone/Asia/Kolkata')).data;
 
 		dateData.datetime;
 
